@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Signin from './pages/Signin/index';
+
+import Signup from './pages/Signup';
 
 function App() {
-  return (
+  const [forms, setForms] = useState([]);
+  const [user, setUser] = useState({ name: "Usuário Placeholder" });
+
+  const handleAddForm = (formData) => {
+    setForms([...forms, formData]);
+  };
+
+return (
+  <>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Signin />} />
+        <Route path="/form" element={<FormPage />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
+    </Router>
+
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Serviços Eletrônicos</h1>
+      <p>Bem-vindo, {user.name}</p>
+
+      <FormList onAddForm={handleAddForm} />
+
+      <h2>Formulários Enviados</h2>
+      <ul>
+        {forms.map((form, index) => (
+          <li key={index}>
+            <p>Problema: {form.problem}</p>
+            <p>Motivo: {form.callReason}</p>
+            <p>Produto: {form.product}</p>
+            <p>Data de Envio: {form.submitDate}</p>
+            <p>Status: {form.status}</p>
+            <p>Contato: {form.contact.email}, {form.contact.phone}</p>
+            <img src={form.photo} alt="Problema" style={{ width: '100px', height: 'auto' }} />
+          </li>
+        ))}
+      </ul>
     </div>
-  );
+  </>
+);
 }
 
 export default App;
