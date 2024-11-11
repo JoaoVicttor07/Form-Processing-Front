@@ -1,8 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Signin from './pages/Signin/index';
-
+<<<<<<< HEAD
+import FormList from './components/FormList';
+=======
 import Signup from './pages/Signup';
+>>>>>>> feature/signupPage
 
 function App() {
   const [forms, setForms] = useState([]);
@@ -17,8 +20,11 @@ return (
     <Router>
       <Routes>
         <Route path="/" element={<Signin />} />
+<<<<<<< HEAD
         <Route path="/form" element={<FormPage />} />
+=======
         <Route path="/signup" element={<Signup />} />
+>>>>>>> feature/signupPage
       </Routes>
     </Router>
 
