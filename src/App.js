@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Signin from './pages/Signin/index';
+<<<<<<< HEAD
 import Signup from './pages/Signup';
+=======
+import Form from './pages/Form/index';
+import Signup from './pages/Signup/index';
+import Signup from './pages/Signup';
+import AdminDashboard from './pages/AdminDashboard';
+>>>>>>> dev
 
 function App() {
   return (
@@ -9,9 +16,19 @@ function App() {
       <Routes>
         <Route path="/" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
+<<<<<<< HEAD
       </Routes>
     </Router>
   );
+=======
+        <Route path="/form" element={<Form />} />
+        <Route path="*" element={<h1>Not Found</h1>} />
+        <Route path="/AdminDashboard" element={<AdminDashboard />} />
+      </Routes>
+    </Router>
+  </>
+);
+>>>>>>> dev
 }
 
 export default App;

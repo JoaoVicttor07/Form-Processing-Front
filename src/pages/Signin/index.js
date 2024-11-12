@@ -45,7 +45,7 @@ function Login() {
 
     // Simulação de autenticação
     if (email === 'admin@exemplo.com' && password === 'admin123') {
-      navigate('/admin-dashboard');
+      navigate('/AdminDashboard');
     } else if (email === 'usuario@example.com' && password === 'usuario123') {
       navigate('/user-dashboard');
     } else {
@@ -56,9 +56,10 @@ function Login() {
   return (
     <div className="login-container">
       <h2>Digite as suas credenciais</h2>
+      {error && <div className="error-message">{error}</div>}
       <div>
         <label>Email:</label>
-         {emailError && <span className="error-asterisk">*</span>}
+        {emailError && <span className="error-asterisk">*</span>}
         <input
           type="email"
           value={email}
@@ -74,7 +75,6 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      {error && <div className="error-message">{error}</div>}
       <button onClick={handleLogin}>Login</button>
       <div className="signup-link">
         <p>Não tem uma conta? <Link to="/signup">Cadastre-se</Link></p>

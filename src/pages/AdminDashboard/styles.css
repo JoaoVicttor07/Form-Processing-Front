@@ -1,0 +1,92 @@
+.admin-dashboard {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.admin-nav {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  background-color: #007bff;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.admin-nav button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #007bff;
+  transition: background-color 0.3s, color 0.3s;
+  margin: 0 10px;
+}
+
+.admin-nav button:hover {
+  background-color: #0056b3;
+  color: #ffffff;
+}
+
+.support-forms, .form-details, .logs, .notifications {
+  margin-top: 20px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.filters input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+  flex: 1;
+}
+
+.filters input:last-child {
+  margin-right: 0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+li:hover {
+  background-color: #f4f4f4;
+}
+
+.form-details button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.form-details button:hover {
+  background-color: #0056b3;
+}
