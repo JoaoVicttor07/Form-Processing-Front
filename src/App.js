@@ -1,11 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Signin from './pages/Signin/index';
-<<<<<<< HEAD
-import FormList from './components/FormList';
-=======
-import Signup from './pages/Signup';
->>>>>>> feature/signupPage
+import Form from './pages/Form/index';
+import Signup from './pages/Signup/index';
 
 function App() {
   const [forms, setForms] = useState([]);
@@ -20,35 +17,11 @@ return (
     <Router>
       <Routes>
         <Route path="/" element={<Signin />} />
-<<<<<<< HEAD
-        <Route path="/form" element={<FormPage />} />
-=======
         <Route path="/signup" element={<Signup />} />
->>>>>>> feature/signupPage
+        <Route path="/form" element={<Form />} />
+        <Route path="*" element={<h1>Not Found</h1>} />
       </Routes>
     </Router>
-
-    <div className="App">
-      <h1>Serviços Eletrônicos</h1>
-      <p>Bem-vindo, {user.name}</p>
-
-      <FormList onAddForm={handleAddForm} />
-
-      <h2>Formulários Enviados</h2>
-      <ul>
-        {forms.map((form, index) => (
-          <li key={index}>
-            <p>Problema: {form.problem}</p>
-            <p>Motivo: {form.callReason}</p>
-            <p>Produto: {form.product}</p>
-            <p>Data de Envio: {form.submitDate}</p>
-            <p>Status: {form.status}</p>
-            <p>Contato: {form.contact.email}, {form.contact.phone}</p>
-            <img src={form.photo} alt="Problema" style={{ width: '100px', height: 'auto' }} />
-          </li>
-        ))}
-      </ul>
-    </div>
   </>
 );
 }
