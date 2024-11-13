@@ -1,3 +1,4 @@
+/* Estilos gerais */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f9;
@@ -5,52 +6,88 @@ body {
   padding: 0;
 }
 
-h1, h2 {
+h1, h2, h3 {
+  text-align: center;
   color: #333;
 }
 
-textarea {
-  width: 100%;
-  height: 100px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-}
-
-input[type="email"],
-input[type="text"],
-input[type="file"],
-select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-}
-
 button {
+  padding: 10px 20px;
+  margin: 10px 0;
   background-color: #4CAF50;
   color: white;
-  padding: 10px 20px;
   border: none;
   cursor: pointer;
-}
-
-button[type="button"] {
-  background-color: #f44336;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
 button:hover {
   background-color: #45a049;
 }
 
-button[type="button"]:hover {
-  background-color: #e04134;
+input[type="text"], input[type="email"], input[type="tel"], input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type="text"], input[type="email"], input[type="tel"] {
+  font-size: 16px;
 }
 
 form {
-  margin-bottom: 20px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 20px auto;
 }
 
-form div {
-  margin-bottom: 10px;
+/* Seções (telas) */
+.home, .form, .review {
+  display: none;
+}
+
+.home.active, .form.active, .review.active {
+  display: block;
+}
+
+/* Layout e alinhamento */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  width: 250px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  background-color: #fff;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+ul li img {
+  margin-top: 10px;
+  max-width: 100px;
+  height: auto;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
 }
