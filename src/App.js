@@ -6,26 +6,19 @@ import Signup from './pages/Signup';
 import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
-  const [forms, setForms] = useState([]);
-  const [user, setUser] = useState({ name: "Usuário Placeholder" });
-
-  const handleAddForm = (formData) => {
-    setForms([...forms, formData]);
-  };
-
-return (
-  <>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Signin />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/form" element={<Form />} />
-        <Route path="*" element={<h1>Not Found</h1>} />
-        <Route path="/AdminDashboard" element={<AdminDashboard />} />
-      </Routes>
-    </Router>
-  </>
-);
+  return (
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Signin />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/form" element={<Form />} />
+          <Route path="*" element={<h1>Not Found</h1>} />
+          <Route path="/AdminDashboard" element={<AdminDashboard />} />
+        </Routes>
+      </Router>
+    </>
+  );
 }
 
 export default App;
