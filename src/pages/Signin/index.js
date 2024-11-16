@@ -47,7 +47,7 @@ function Login() {
     if (email === 'admin@exemplo.com' && password === 'admin123') {
       navigate('/AdminDashboard');
     } else if (email === 'usuario@example.com' && password === 'usuario123') {
-      navigate('/user-dashboard');
+      navigate('/Form');
     } else {
       setError('Email ou senha incorretos');
     }
