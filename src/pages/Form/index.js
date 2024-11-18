@@ -1,35 +1,48 @@
 import React, { useState } from 'react';
 import './styles.css';
+import { sendEmail } from '../../components/emailSender'; // minúsculas
+import { generateToken } from '../../components/tokenGenerator'; // minúsculas
 
 function Index() {
-  const [forms, setForms] = useState([]);  // Estado para armazenar os formulários
-  const [view, setView] = useState('home');  // Controla a exibição das telas (home, form, review)
-  const [user, setUser] = useState({ name: "Usuário Placeholder" });  // Estado para o usuário
-  const [error, setError] = useState(null);  // Estado para erros
-  const [formToDelete, setFormToDelete] = useState(null);  // Índice do formulário a ser deletado
-  const [confirmDelete, setConfirmDelete] = useState(false);  // Estado para controlar a confirmação de exclusão
+  const [forms, setForms] = useState([]);
+  const [view, setView] = useState('home');
+  const [user, setUser] = useState({ name: "Usuário Placeholder" });
+  const [error, setError] = useState(null);
+  const [formToDelete, setFormToDelete] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
-  // Função para adicionar um novo formulário à lista
-  const handleAddForm = (newForm) => {
-    setForms((prevForms) => [...prevForms, newForm]);  // Adiciona o novo formulário ao estado
-    setView('home');  // Volta para a página inicial após o envio
+  const handleAddForm = async (newForm) => {
+    // Gera o token único para o formulário
+    const token = generateToken(forms.length);
+
+    // Cria o formulário com o token
+    const updatedForm = { ...newForm, token };
+
+    try {
+      // Simula o envio de e-mail com informações do ticket
+      await sendEmail(updatedForm.contact.email, token, updatedForm.status);
+
+      // Adiciona o formulário à lista
+      setForms((prevForms) => [...prevForms, updatedForm]);
+      setView('home'); // Retorna à tela inicial após o envio
+    } catch (err) {
+      console.error("Erro ao enviar o e-mail:", err);
+      setError(err.message || "Erro ao enviar o e-mail.");
+    }
   };
 
-  // Função para exibir a confirmação de exclusão
   const handleDeleteForm = (index) => {
-    setFormToDelete(index);  // Armazena o índice do formulário a ser deletado
-    setConfirmDelete(true);  // Exibe a confirmação de exclusão
+    setFormToDelete(index);
+    setConfirmDelete(true);
   };
 
-  // Função para confirmar a exclusão
   const handleConfirmDelete = () => {
-    setForms((prevForms) => prevForms.filter((_, i) => i !== formToDelete));  // Remove o formulário
-    setConfirmDelete(false);  // Fecha a caixa de confirmação
+    setForms((prevForms) => prevForms.filter((_, i) => i !== formToDelete));
+    setConfirmDelete(false);
   };
 
-  // Função para cancelar a exclusão
   const handleCancelDelete = () => {
-    setConfirmDelete(false);  // Fecha a caixa de confirmação
+    setConfirmDelete(false);
   };
 
   return (
@@ -38,9 +51,7 @@ function Index() {
       <div className={`home ${view === 'home' ? 'active' : ''}`}>
         <h1>Serviços Eletrônicos</h1>
         <p>Bem-vindo, {user.name}</p>
-        
         <button onClick={() => setView('form')}>Criar Novo Formulário</button>
-        
         {forms.length > 0 && (
           <button onClick={() => setView('review')}>Ver Formulários Anteriores</button>
         )}
@@ -53,15 +64,12 @@ function Index() {
 
       {/* Tela de revisão dos formulários enviados */}
       <div className={`review ${view === 'review' ? 'active' : ''}`}>
-        <button
-          className="back-button"
-          onClick={() => setView('home')}
-        >
+        <button className="back-button" onClick={() => setView('home')}>
           &larr; Voltar
         </button>
         <h2>Formulários Anteriores</h2>
         {forms.length === 0 ? (
-          <p>Não existem tickets.</p>  // Mensagem quando não houver formulários
+          <p>Não existem tickets.</p>
         ) : (
           <ul>
             {forms.map((form, index) => (
@@ -73,11 +81,18 @@ function Index() {
                 <p><strong>Data de Envio:</strong> {form.submitDate}</p>
                 <p><strong>Status:</strong> {form.status}</p>
                 <p><strong>Contato:</strong> {form.contact.email}, {form.contact.phone}</p>
-                {form.photo && <img src={form.photo} alt="Problema" style={{ width: '100px', height: 'auto' }} />}
-                <button 
-                  className="delete-button" 
-                  onClick={() => handleDeleteForm(index)} >
-                    🗑️
+                {form.photo && (
+                  <img
+                    src={form.photo}
+                    alt="Problema"
+                    style={{ width: '100px', height: 'auto' }}
+                  />
+                )}
+                <button
+                  className="delete-button"
+                  onClick={() => handleDeleteForm(index)}
+                >
+                  🗑️
                 </button>
               </li>
             ))}
@@ -108,28 +123,19 @@ function Form({ onSubmit, setView, setError, forms }) {
   const [contactPhone, setContactPhone] = useState('');
   const [photo, setPhoto] = useState(null);
 
-  // Função para formatação automática do telefone
   const formatPhone = (phone) => {
     return phone
-      .replace(/\D/g, '') // Remove tudo que não é número
-      .replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3'); // Formata no padrão (XX) XXXXX-XXXX
+      .replace(/\D/g, '')
+      .replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
   };
 
-  // Função para lidar com o envio do formulário
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    // Validação simples do formulário
     if (!problem || !callReason || !product || !contactEmail || !contactPhone) {
       setError('Por favor, preencha todos os campos.');
       return;
     }
-
-    // Gerar o token com base no número de formulários já enviados
-    // Gerar o token único para cada ticket/formulário
-    // O token é gerado com base no número de formulários já enviados
-    // Ele serve para identificar e rastrear cada ticket individualmente
-    const token = `ticket#${forms.length + 1}`;
 
     const newForm = {
       problem,
@@ -139,31 +145,16 @@ function Form({ onSubmit, setView, setError, forms }) {
       photo,
       submitDate: new Date().toLocaleDateString(),
       status: 'Aguardando',
-      token,  // Incluindo o token
     };
 
-    // Simulação de envio (sem backend)
-    try {
-      // Simulando uma resposta de sucesso
-      const simulatedResponse = { message: 'Ticket criado com sucesso' };
-      if (simulatedResponse.message === 'Ticket criado com sucesso') {
-        onSubmit(newForm);  // Chama a função onSubmit do componente pai para adicionar o ticket
-        setError(null);  // Limpa erros se a simulação for bem-sucedida
-
-        // Limpar os campos após envio
-        setProblem('');
-        setCallReason('');
-        setProduct('');
-        setContactEmail('');
-        setContactPhone('');
-        setPhoto(null);  // Limpar a foto também
-      } else {
-        setError(simulatedResponse.message || 'Erro ao criar ticket');
-      }
-    } catch (error) {
-      console.error('Erro ao enviar ticket:', error);
-      setError('Ocorreu um erro ao enviar o formulário.');
-    }
+    onSubmit(newForm);
+    setError(null);
+    setProblem('');
+    setCallReason('');
+    setProduct('');
+    setContactEmail('');
+    setContactPhone('');
+    setPhoto(null);
   };
 
   return (
@@ -195,7 +186,7 @@ function Form({ onSubmit, setView, setError, forms }) {
           type="text"
           value={problem}
           onChange={(e) => setProblem(e.target.value)}
-          placeholder="Ex.: O dispositivo não liga"
+          placeholder="Ex.: O dispositivo não liga..."
           required
         />
       </div>
@@ -237,8 +228,8 @@ function Form({ onSubmit, setView, setError, forms }) {
           setContactEmail('');
           setContactPhone('');
           setPhoto(null);
-          setView('home');  // Retorna para a tela inicial
-          setError(null);  // Limpa os erros
+          setView('home');
+          setError(null);
         }}
       >
         Cancelar
