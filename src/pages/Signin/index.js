@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import api from '../../services/api'; // Importe a configuração da API
 import './styles.css';
 
 function Login() {
@@ -15,7 +16,7 @@ function Login() {
     return re.test(email);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => { // Marque a função como async
     let valid = true;
     setEmailError(false);
     setPasswordError(false);
@@ -43,13 +44,20 @@ function Login() {
       return;
     }
 
-    // Simulação de autenticação
-    if (email === 'admin@exemplo.com' && password === 'admin123') {
-      navigate('/AdminDashboard');
-    } else if (email === 'usuario@example.com' && password === 'usuario123') {
-      navigate('/Form');
-    } else {
-      setError('Email ou senha incorretos');
+    try {
+      const response = await api.post('/auth/login', { email, password });
+      if (response.status === 200) {
+        const { role } = response.data;
+        if (role === 'admin') {
+          navigate('/AdminDashboard');
+        } else if (role === 'user') {
+          navigate('/Form');
+        }
+      } else {
+        setError('Email ou senha incorretos');
+      }
+    } catch (error) {
+      setError('Erro ao conectar com o servidor');
     }
   };
 
@@ -59,21 +67,21 @@ function Login() {
       {error && <div className="error-message">{error}</div>}
       <div>
         <label>Email:</label>
-        {emailError && <span className="error-asterisk">*</span>}
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        {emailError && <div className="error-message">Email é obrigatório</div>}
       </div>
       <div>
         <label>Senha:</label>
-        {passwordError && <span className="error-asterisk">*</span>}
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {passwordError && <div className="error-message">Senha é obrigatória</div>}
       </div>
       <button onClick={handleLogin}>Login</button>
       <div className="signup-link">
