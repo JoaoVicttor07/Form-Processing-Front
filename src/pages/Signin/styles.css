@@ -3,18 +3,23 @@ body, html {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f4f4f4;
+  background-image: url('/Users/gustavocae/Downloads/clonea3/Sem Título/Form-Processing-Front/public/vibrant-colors-flow-abstract-wave-pattern-generated-by-ai.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.login-container {
+.login-container { 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 41px;
+  background-color: rgba(0, 0, 0, 0.228);
+  backdrop-filter: blur(30px);
+  border: 0.1px solid #ffffff9e;
+  border-radius: 19px;
+  
   max-width: 400px;
   width: 100%;
 }
@@ -22,7 +27,7 @@ body, html {
 .login-container h2 {
   margin-bottom: 20px;
   font-size: 24px;
-  color: #333;
+  color: #ffffff;
 }
 
 .login-container .error-message {
@@ -33,7 +38,7 @@ body, html {
 .login-container label {
   margin-bottom: 5px;
   font-weight: bold;
-  color: #333;
+  color: #ffffff;
   align-self: flex-start;
 }
 
@@ -48,14 +53,16 @@ body, html {
   margin-bottom: 15px;
   padding: 10px;
   width: 250px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  background: transparent;
+  border-radius: 8px;
   box-sizing: border-box;
   transition: border-color 0.3s;
 }
 
 .login-container input:focus {
-  border-color: #007bff;
+  border-color: #ffffff;
   outline: none;
 }
 
@@ -65,20 +72,22 @@ body, html {
   font-size: 16px;
   cursor: pointer;
   border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
   width: 250px;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease, width 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .login-container button:hover {
-  background-color: #0056b3;
+  background-color: #ffffff;
+  width: 257px;
+  box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.3);
 }
 
 .login-container .signup-link {
   font-size: 14px;
-  color: #666;
+  color: #ffffff;
 }
 
 .login-container .signup-link a {
