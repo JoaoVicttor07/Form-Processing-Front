@@ -3,10 +3,18 @@ body, html {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url('/Users/gustavocae/Downloads/clonea3/Sem Título/Form-Processing-Front/public/vibrant-colors-flow-abstract-wave-pattern-generated-by-ai.jpg');
+  background-image: url('/Users/gustavocae/Downloads/clonea3/Sem Título/Form-Processing-Front/public/-24.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+img {
+  position: absolute; /* Posiciona a imagem de forma absoluta */
+  top: 10px;             /* Alinha ao topo */
+  left: 40px;            /* Alinha à esquerda */
+  width: 110px;       /* Ajuste a largura da imagem conforme necessário */
+  height: auto;       /* A altura será ajustada proporcionalmente */
 }
 
 .login-container { 
@@ -24,9 +32,9 @@ body, html {
   width: 100%;
 }
 
-.login-container h2 {
+.login-container h3 {
   margin-bottom: 20px;
-  font-size: 24px;
+  font-size: 20px;
   color: #ffffff;
 }
 
@@ -58,11 +66,19 @@ body, html {
   background: transparent;
   border-radius: 8px;
   box-sizing: border-box;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, box-shadow 0.9s, width 0.3s;
 }
 
 .login-container input:focus {
   border-color: #ffffff;
+  box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.3);
+  width: 257px;
+  outline: none;
+}
+
+.login-container input:hover {
+  border-color: #ffffff;
+  width: 257px;
   outline: none;
 }
 
@@ -91,7 +107,7 @@ body, html {
 }
 
 .login-container .signup-link a {
-  color: #007bff;
+  color: #00d0ff;
   text-decoration: none;
   font-weight: bold;
 }

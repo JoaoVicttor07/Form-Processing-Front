@@ -54,31 +54,36 @@ function Login() {
   };
 
   return (
+    <div>
+    <img src= "/logoyour.png" alt=" logo" />
     <div className="login-container">
-      <h2>Digite as suas credenciais</h2>
+      <h3>Inicie sessão na Your Ticket</h3>
       {error && <div className="error-message">{error}</div>}
       <div>
-        <label>Email:</label>
+        
         {emailError && <span className="error-asterisk">*</span>}
         <input
           type="email"
+          placeholder="E-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
       <div>
-        <label>Senha:</label>
+       
         {passwordError && <span className="error-asterisk">*</span>}
         <input
           type="password"
+          placeholder='Senha'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <button onClick={handleLogin}>Login</button>
+      <button onClick={handleLogin}>Acessar</button>
       <div className="signup-link">
         <p>Não tem uma conta? <Link to="/signup">Cadastre-se</Link></p>
       </div>
+    </div>
     </div>
   );
 }
