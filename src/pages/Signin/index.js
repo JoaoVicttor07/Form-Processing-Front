@@ -7,42 +7,35 @@ function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({ email: false, password: false });
+  const [generalError, setGeneralError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   };
 
-  const handleLogin = async () => { // Marque a função como async
-    let valid = true;
-    setEmailError(false);
-    setPasswordError(false);
+  const handleLogin = async () => {
+    const errors = { email: false, password: false };
+    setFieldErrors(errors);
+    setGeneralError('');
 
-    if (!email && !password) {
-      setEmailError(true);
-      setPasswordError(true);
-      setError('Campos obrigatórios não preenchidos');
-      valid = false;
-    } else if (!email) {
-      setEmailError(true);
-      setError('Campos obrigatórios não preenchidos');
-      valid = false;
-    } else if (!password) {
-      setPasswordError(true);
-      setError('Campos obrigatórios não preenchidos');
-      valid = false;
-    } else if (!validateEmail(email)) {
-      setEmailError(true);
-      setError('Formato de email inválido');
-      valid = false;
-    }
+    if (!email) errors.email = true;
+    else if (!validateEmail(email)) errors.email = true;
 
-    if (!valid) {
-      return;
-    }
+    if (!password) errors.password = true;
+
+    if (!email) setGeneralError('Campo de email vazio');
+    else if (!validateEmail(email)) setGeneralError('Formato de email inválido');
+    else if (!password) setGeneralError('A senha é obrigatória');
+
+    setFieldErrors(errors);
+
+    // Interrompendo se houver qualquer erro
+    if (errors.email || errors.password) return;
+
+    setLoading(true);
 
     try {
       const response = await api.post('/auth/login', { email, password });
@@ -54,36 +47,55 @@ function Login() {
           navigate('/Form');
         }
       } else {
-        setError('Email ou senha incorretos');
+        setGeneralError('Email ou senha incorretos');
       }
     } catch (error) {
-      setError('Erro ao conectar com o servidor');
+      setGeneralError('Erro ao conectar com o servidor');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="login-container">
       <h2>Digite as suas credenciais</h2>
-      {error && <div className="error-message">{error}</div>}
+      {generalError && <div className="error-message" aria-live="polite">{generalError}</div>}
       <div>
-        <label>Email:</label>
+        <label htmlFor="email">
+          Email:<span className="error-asterisk">{fieldErrors.email && '*'}</span>
+        </label>
         <input
+          id="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className={fieldErrors.email ? 'input-error' : ''}
+          aria-invalid={fieldErrors.email}
         />
-        {emailError && <div className="error-message">Email é obrigatório</div>}
       </div>
       <div>
-        <label>Senha:</label>
+        <label htmlFor="password">
+          Senha:<span className="error-asterisk">{fieldErrors.password && '*'}</span>
+        </label>
         <input
+          id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className={fieldErrors.password ? 'input-error' : ''}
+          aria-invalid={fieldErrors.password}
         />
-        {passwordError && <div className="error-message">Senha é obrigatória</div>}
       </div>
-      <button onClick={handleLogin}>Login</button>
+      <button onClick={handleLogin} disabled={loading} className="button-loading">
+        {loading ? (
+          <>
+            Carregando...
+            <div className="spinner"></div>
+          </>
+        ) : (
+          'Login'
+        )}
+      </button>
       <div className="signup-link">
         <p>Não tem uma conta? <Link to="/signup">Cadastre-se</Link></p>
       </div>

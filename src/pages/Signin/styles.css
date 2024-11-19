@@ -42,6 +42,10 @@ body, html {
   margin-left: 5px;
 }
 
+.input-error {
+  border: 1px solid red;
+}
+
 .login-container input {
   display: flex;
   flex-direction: column;
@@ -89,6 +93,28 @@ body, html {
 
 .login-container .signup-link a:hover {
   text-decoration: underline;
+}
+
+.button-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #ffffff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* para telas de tablet */
