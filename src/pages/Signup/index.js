@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import api from '../../services/api'; // Importe a configuração da API
 import './styles.css';
 
 function Signup() {
@@ -8,19 +9,20 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     setNameError(false);
     setEmailError(false);
     setPasswordError(false);
@@ -51,7 +53,6 @@ function Signup() {
       return;
     }
 
-    // Verificar formato de email
     if (!validateEmail(email)) {
       setEmailError(true);
       setError('Formato de email inválido.');
@@ -64,73 +65,99 @@ function Signup() {
       return;
     }
 
-    // Verificar critérios da senha
-    if (password.length < 6) {
-      setPasswordError(true);
-      setError('A senha deve ter pelo menos 6 caracteres.');
-      return;
-    }
-
-    if (!confirmPassword) {
-      setConfirmPasswordError(true);
-      setError('O campo confirmar senha é obrigatório.');
-      return;
-    }
-
-    // Verificar correspondência da senha com confirmar senha
     if (password !== confirmPassword) {
-      setPasswordError(true);
       setConfirmPasswordError(true);
       setError('As senhas não coincidem.');
       return;
     }
 
-    // Enviar dados para o backend (simulação)
-    console.log('Cadastro realizado:', { name, email, password });
-    setSuccess(true);
+    setLoading(true);
+
+    try {
+      console.log('Enviando dados para a API:', { name, email, password });
+      const response = await api.post('/auth/register', { name, email, password });
+      console.log('Resposta da API:', response);
+
+      if (response.status === 200 || response.status === 201) {
+        setSuccess(true);
+      } else {
+        setError('Erro ao criar conta, tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao criar conta:', error);
+      if (error.response) {
+        console.error('Dados da resposta de erro:', error.response.data);
+        setError(error.response.data.message || 'Erro ao criar conta, tente novamente.');
+      } else {
+        setError('Erro ao criar conta, tente novamente.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="signup-container">
-      <h2>Cadastro de Usuário</h2>
-      {error && <div className="error-message">{error}</div>}
+      <h2>Crie sua conta</h2>
+      {error && <div className="error-message" aria-live="polite">{error}</div>}
       <div>
-        <label>Nome:</label>
-        {nameError && <span className="error-asterisk">*</span>}
+        <label htmlFor="name">Nome:</label>
         <input
+          id="name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          className={nameError ? 'input-error' : ''}
+          aria-invalid={nameError}
         />
+        {nameError && <div className="error-message">O campo nome é obrigatório.</div>}
       </div>
       <div>
-        <label>Email:</label>
-        {emailError && <span className="error-asterisk">*</span>}
+        <label htmlFor="email">Email:</label>
         <input
+          id="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className={emailError ? 'input-error' : ''}
+          aria-invalid={emailError}
         />
+        {emailError && <div className="error-message">{emailError === 'Formato de email inválido.' ? 'Formato de email inválido.' : 'O campo email é obrigatório.'}</div>}
       </div>
       <div>
-        <label>Senha:</label>
-        {passwordError && <span className="error-asterisk">*</span>}
+        <label htmlFor="password">Senha:</label>
         <input
+          id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className={passwordError ? 'input-error' : ''}
+          aria-invalid={passwordError}
         />
+        {passwordError && <div className="error-message">O campo senha é obrigatório.</div>}
       </div>
       <div>
-        <label>Confirmar Senha:</label>
-        {confirmPasswordError && <span className="error-asterisk">*</span>}
+        <label htmlFor="confirmPassword">Confirme a Senha:</label>
         <input
+          id="confirmPassword"
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          className={confirmPasswordError ? 'input-error' : ''}
+          aria-invalid={confirmPasswordError}
         />
+        {confirmPasswordError && <div className="error-message">As senhas não coincidem.</div>}
       </div>
-      <button onClick={handleSignup}>Cadastrar</button>
+      <button onClick={handleSignup} disabled={loading} className="button-loading">
+        {loading ? (
+          <>
+            Carregando...
+            <div className="spinner"></div>
+          </>
+        ) : (
+          'Cadastrar'
+        )}
+      </button>
       <div className="login-link">
         <p>Já tem uma conta? <Link to="/">Faça login</Link></p>
       </div>

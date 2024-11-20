@@ -41,9 +41,9 @@ function Login() {
       const response = await api.post('/auth/login', { email, password });
       if (response.status === 200) {
         const { role } = response.data;
-        if (role === 'admin') {
+        if (role === 'ADMIN') {
           navigate('/AdminDashboard');
-        } else if (role === 'user') {
+        } else if (role === 'USER') {
           navigate('/Form');
         }
       } else {
