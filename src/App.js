@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Form from './pages/Form/index';
 import Signin from './pages/Signin/index';
 import Signup from './pages/Signup';
 import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './components/protectedRoute';
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/form" element={<Form />} />
           <Route path="*" element={<h1>Not Found</h1>} />
-          <Route path="/AdminDashboard" element={<AdminDashboard />} />
+          <Route path="/AdminDashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         </Routes>
       </Router>
     </>

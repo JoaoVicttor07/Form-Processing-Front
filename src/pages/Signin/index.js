@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode'; // Importa o decodificador JWT
 import api from '../../services/api'; // Importe a configuração da API
 import './styles.css';
 
@@ -16,7 +17,8 @@ function Login() {
     return re.test(email);
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevenir o comportamento padrão do formulário
     const errors = { email: false, password: false };
     setFieldErrors(errors);
     setGeneralError('');
@@ -38,19 +40,51 @@ function Login() {
     setLoading(true);
 
     try {
+      console.log('Enviando requisição para /auth/login com:', { email, password });
       const response = await api.post('/auth/login', { email, password });
+      console.log('Resposta da API:', response);
+
       if (response.status === 200) {
-        const { role } = response.data;
+        const { token } = response.data;
+        console.log('Token recebido:', token);
+
+        // Decodificar o token para extrair o campo role
+        let role;
+        try {
+          const decoded = jwtDecode(token);
+          role = decoded.role;
+          console.log('Campo role decodificado do token:', role);
+        } catch (err) {
+          console.error('Erro ao decodificar o token:', err);
+          setGeneralError('Erro ao processar informações do usuário');
+          return;
+        }
+
+        // Armazenar o token no localStorage
+        localStorage.setItem('authToken', token);
+
+        // Redirecionar com base no role
         if (role === 'ADMIN') {
+          console.log('Usuário é ADMIN, redirecionando para /AdminDashboard');
           navigate('/AdminDashboard');
         } else if (role === 'USER') {
+          console.log('Usuário é USER, redirecionando para /Form');
           navigate('/Form');
+        } else {
+          console.log('Role desconhecido:', role);
+          setGeneralError('Role desconhecido');
         }
       } else {
         setGeneralError('Email ou senha incorretos');
+        console.log('Email ou senha incorretos');
       }
     } catch (error) {
-      setGeneralError('Erro ao conectar com o servidor');
+      if (error.response && error.response.status === 401) {
+        setGeneralError('Email ou senha incorretos');
+      } else {
+        setGeneralError('Erro ao conectar com o servidor');
+      }
+      console.error('Erro ao conectar com o servidor:', error);
     } finally {
       setLoading(false);
     }
