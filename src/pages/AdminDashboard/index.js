@@ -13,7 +13,7 @@ function AdminDashboard() {
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (!token) {
-      navigate('/login');
+      navigate('/signin');
     }
     // Fetch data from backend (simulação)
     setSupportForms([
@@ -45,9 +45,11 @@ function AdminDashboard() {
   };
 
   const handleLogout = () => {
-    // Perform logout (simulação)
+    // Remover o token de autenticação do localStorage
     localStorage.removeItem('authToken');
-    navigate('/login');
+    console.log('Token removido do localStorage');
+    // Redirecionar para a página de login
+    navigate('/signin');
   };
 
   return (

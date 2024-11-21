@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Form from './pages/Form/index';
 import Signin from './pages/Signin/index';
 import Signup from './pages/Signup';
@@ -11,11 +11,12 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<Signin />} />
+          <Route path="/" element={<Navigate to="/signin" />} />
+          <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/form" element={<Form />} />
-          <Route path="*" element={<h1>Not Found</h1>} />
           <Route path="/AdminDashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
       </Router>
     </>
