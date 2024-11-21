@@ -91,18 +91,16 @@ function Login() {
   };
 
   return (
-    <div>
-    <img src= "/logoyour.png" alt=" logo" />
     <div className="login-container">
       <h3>Inicie sessão na Your Ticket</h3>
       {generalError && <div className="error-message" aria-live="polite">{generalError}</div>}
       <div>
-        
-        {emailError && <span className="error-asterisk">*</span>}
+        <label htmlFor="email">
+          Email:<span className="error-asterisk">{fieldErrors.email && '*'}</span>
+        </label>
         <input
           id="email"
           type="email"
-          placeholder="E-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className={fieldErrors.email ? 'input-error' : ''}
@@ -116,7 +114,6 @@ function Login() {
         <input
           id="password"
           type="password"
-          placeholder='Senha'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className={fieldErrors.password ? 'input-error' : ''}
@@ -136,7 +133,6 @@ function Login() {
       <div className="signup-link">
         <p>Não tem uma conta? <Link to="/signup">Cadastre-se</Link></p>
       </div>
-    </div>
     </div>
   );
 }
