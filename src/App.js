@@ -4,7 +4,7 @@ import Form from './pages/Form/index';
 import Signin from './pages/Signin/index';
 import Signup from './pages/Signup';
 import AdminDashboard from './pages/AdminDashboard';
-import ProtectedRoute from './components/ProtectedRoute'; // Certifique-se de que o nome está correto
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
