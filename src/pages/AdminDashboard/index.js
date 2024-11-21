@@ -11,6 +11,10 @@ function AdminDashboard() {
   const [filter, setFilter] = useState({ status: '', date: '', sector: '' });
 
   useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      navigate('/signin');
+    }
     // Fetch data from backend (simulação)
     setSupportForms([
       // Dados simulados
@@ -25,7 +29,7 @@ function AdminDashboard() {
       // Dados simulados
       { id: 1, formId: 1, message: 'Seu problema foi resolvido', status: 'Enviado', date: '05-10-2024' },
     ]);
-  }, []);
+  }, [navigate]);
 
   const handleFilterChange = (e) => {
     setFilter({ ...filter, [e.target.name]: e.target.value });
@@ -41,8 +45,11 @@ function AdminDashboard() {
   };
 
   const handleLogout = () => {
-    // Perform logout (simulação)
-    navigate('/');
+    // Remover o token de autenticação do localStorage
+    localStorage.removeItem('authToken');
+    console.log('Token removido do localStorage');
+    // Redirecionar para a página de login
+    navigate('/signin');
   };
 
   return (

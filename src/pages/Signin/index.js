@@ -1,55 +1,92 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode'; // Importa o decodificador JWT
+import api from '../../services/api'; // Importe a configuração da API
 import './styles.css';
 
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({ email: false, password: false });
+  const [generalError, setGeneralError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   };
 
-  const handleLogin = () => {
-    let valid = true;
-    setEmailError(false);
-    setPasswordError(false);
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevenir o comportamento padrão do formulário
+    const errors = { email: false, password: false };
+    setFieldErrors(errors);
+    setGeneralError('');
 
-    if (!email && !password) {
-      setEmailError(true);
-      setPasswordError(true);
-      setError('Campos obrigatórios não preenchidos');
-      valid = false;
-    } else if (!email) {
-      setEmailError(true);
-      setError('Campos obrigatórios não preenchidos');
-      valid = false;
-    } else if (!password) {
-      setPasswordError(true);
-      setError('Campos obrigatórios não preenchidos');
-      valid = false;
-    } else if (!validateEmail(email)) {
-      setEmailError(true);
-      setError('Formato de email inválido');
-      valid = false;
-    }
+    if (!email) errors.email = true;
+    else if (!validateEmail(email)) errors.email = true;
 
-    if (!valid) {
-      return;
-    }
+    if (!password) errors.password = true;
 
-    // Simulação de autenticação
-    if (email === 'admin@exemplo.com' && password === 'admin123') {
-      navigate('/AdminDashboard');
-    } else if (email === 'usuario@example.com' && password === 'usuario123') {
-      navigate('/Form');
-    } else {
-      setError('Email ou senha incorretos');
+    if (!email) setGeneralError('Campo de email vazio');
+    else if (!validateEmail(email)) setGeneralError('Formato de email inválido');
+    else if (!password) setGeneralError('A senha é obrigatória');
+
+    setFieldErrors(errors);
+
+    // Interrompendo se houver qualquer erro
+    if (errors.email || errors.password) return;
+
+    setLoading(true);
+
+    try {
+      console.log('Enviando requisição para /auth/login com:', { email, password });
+      const response = await api.post('/auth/login', { email, password });
+      console.log('Resposta da API:', response);
+
+      if (response.status === 200) {
+        const { token } = response.data;
+        console.log('Token recebido:', token);
+
+        // Decodificar o token para extrair o campo role
+        let role;
+        try {
+          const decoded = jwtDecode(token);
+          role = decoded.role;
+          console.log('Campo role decodificado do token:', role);
+        } catch (err) {
+          console.error('Erro ao decodificar o token:', err);
+          setGeneralError('Erro ao processar informações do usuário');
+          return;
+        }
+
+        // Armazenar o token no localStorage
+        localStorage.setItem('authToken', token);
+
+        // Redirecionar com base no role
+        if (role === 'ADMIN') {
+          console.log('Usuário é ADMIN, redirecionando para /AdminDashboard');
+          navigate('/AdminDashboard');
+        } else if (role === 'USER') {
+          console.log('Usuário é USER, redirecionando para /Form');
+          navigate('/Form');
+        } else {
+          console.log('Role desconhecido:', role);
+          setGeneralError('Role desconhecido');
+        }
+      } else {
+        setGeneralError('Email ou senha incorretos');
+        console.log('Email ou senha incorretos');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setGeneralError('Email ou senha incorretos');
+      } else {
+        setGeneralError('Erro ao conectar com o servidor');
+      }
+      console.error('Erro ao conectar com o servidor:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,28 +95,44 @@ function Login() {
     <img src= "/logoyour.png" alt=" logo" />
     <div className="login-container">
       <h3>Inicie sessão na Your Ticket</h3>
-      {error && <div className="error-message">{error}</div>}
+      {generalError && <div className="error-message" aria-live="polite">{generalError}</div>}
       <div>
         
         {emailError && <span className="error-asterisk">*</span>}
         <input
+          id="email"
           type="email"
           placeholder="E-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className={fieldErrors.email ? 'input-error' : ''}
+          aria-invalid={fieldErrors.email}
         />
       </div>
       <div>
-       
-        {passwordError && <span className="error-asterisk">*</span>}
+        <label htmlFor="password">
+          Senha:<span className="error-asterisk">{fieldErrors.password && '*'}</span>
+        </label>
         <input
+          id="password"
           type="password"
           placeholder='Senha'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className={fieldErrors.password ? 'input-error' : ''}
+          aria-invalid={fieldErrors.password}
         />
       </div>
-      <button onClick={handleLogin}>Acessar</button>
+      <button onClick={handleLogin} disabled={loading} className="button-loading">
+        {loading ? (
+          <>
+            Carregando...
+            <div className="spinner"></div>
+          </>
+        ) : (
+          'Login'
+        )}
+      </button>
       <div className="signup-link">
         <p>Não tem uma conta? <Link to="/signup">Cadastre-se</Link></p>
       </div>
