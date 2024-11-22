@@ -7,8 +7,8 @@ import './styles.css';
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [fieldErrors, setFieldErrors] = useState({ email: false, password: false });
+  const [senha, setSenha] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({ email: false, senha: false });
   const [generalError, setGeneralError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -19,29 +19,29 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevenir o comportamento padrão do formulário
-    const errors = { email: false, password: false };
+    const errors = { email: false, senha: false };
     setFieldErrors(errors);
     setGeneralError('');
 
     if (!email) errors.email = true;
     else if (!validateEmail(email)) errors.email = true;
 
-    if (!password) errors.password = true;
+    if (!senha) errors.senha = true;
 
     if (!email) setGeneralError('Campo de email vazio');
     else if (!validateEmail(email)) setGeneralError('Formato de email inválido');
-    else if (!password) setGeneralError('A senha é obrigatória');
+    else if (!senha) setGeneralError('A senha é obrigatória');
 
     setFieldErrors(errors);
 
     // Interrompendo se houver qualquer erro
-    if (errors.email || errors.password) return;
+    if (errors.email || errors.senha) return;
 
     setLoading(true);
 
     try {
-      console.log('Enviando requisição para /auth/login com:', { email, password });
-      const response = await api.post('/auth/login', { email, password });
+      console.log('Enviando requisição para /auth/login com:', { email, senha });
+      const response = await api.post('/auth/login', { email, senha },{ headers: { 'Content-Type': 'application/json' } });
       console.log('Resposta da API:', response);
 
       if (response.status === 200) {
@@ -108,16 +108,16 @@ function Login() {
         />
       </div>
       <div>
-        <label htmlFor="password">
-          Senha:<span className="error-asterisk">{fieldErrors.password && '*'}</span>
+        <label htmlFor="senha">
+          Senha:<span className="error-asterisk">{fieldErrors.senha && '*'}</span>
         </label>
         <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={fieldErrors.password ? 'input-error' : ''}
-          aria-invalid={fieldErrors.password}
+          id="senha"
+          type="senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          className={fieldErrors.senha ? 'input-error' : ''}
+          aria-invalid={fieldErrors.senha}
         />
       </div>
       <button onClick={handleLogin} disabled={loading} className="button-loading">
