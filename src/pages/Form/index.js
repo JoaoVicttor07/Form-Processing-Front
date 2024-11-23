@@ -1,61 +1,34 @@
 import React, { useState } from 'react';
-import './styles.css';
-import api from '../../services/api';
+import api from '../../services/api'; // Certifique-se de ajustar o caminho conforme necessário
 
-function Form({ onSubmit, setView, setError }) {
-  const [callReason, setCallReason] = useState('');
-  const [sector, setSector] = useState('');
-  const [problem, setProblem] = useState('');
+const Form = () => {
+  const [motivo, setCallReason] = useState('');
+  const [setor, setSector] = useState('');
+  const [problema, setProblem] = useState('');
 
-  const handleFormSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!callReason || !sector || !problem) {
-      setError('Por favor, preencha todos os campos.');
-      return;
-    }
-
-    const authToken = localStorage.getItem('authToken'); // Obtém o token do localStorage
-    if (!authToken) {
-      setError('Usuário não autenticado. Faça login novamente.');
-      return;
-    }
+    console.log('Enviando formulário...');
 
     try {
-      const response = await api.post(
-        '/form/create', 
-        { 
-          motivo, 
-          setor, 
-          problema 
-        },
-        { 
-          headers: { 
-            Authorization: `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          } 
-        }
-      );
+      const response = await api.post('/form/create', {
+        motivo,
+        setor,
+        problema,
+      });
 
-      if (response.status === 201) {
-        onSubmit(response.data); 
-        setError(null);
-        setCallReason('');
-        setSector('');
-        setProblem('');
-        setView('home'); 
+      if (response.status === 200) {
+        console.log('Formulário enviado com sucesso!');
       } else {
-        setError('Erro ao enviar o formulário.');
+        console.log('Erro ao enviar o formulário:', response.statusText);
       }
-    } catch (err) {
-      console.error('Erro ao enviar o formulário:', err);
-      setError(err.response?.data?.message || 'Erro ao conectar ao servidor.');
+    } catch (error) {
+      console.log('Erro ao enviar o formulário:', error.message);
     }
   };
 
   return (
-    <form onSubmit={handleFormSubmit}>
-      <h3>Criar Formulário</h3>
+    <form onSubmit={handleSubmit}>
       <div>
         <label>Motivo:</label>
         <input
@@ -92,14 +65,12 @@ function Form({ onSubmit, setView, setError }) {
           setCallReason('');
           setSector('');
           setProblem('');
-          setView('home');
-          setError(null);
         }}
       >
-        Cancelar
+        Limpar
       </button>
     </form>
   );
-}
+};
 
 export default Form;
