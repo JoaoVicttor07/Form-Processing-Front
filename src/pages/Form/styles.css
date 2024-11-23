@@ -1,198 +1,61 @@
-/* Estilos gerais */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-}
-
-/* Container principal */
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
   padding: 20px;
-}
-
-/* Estilo das telas */
-.home, .form, .review {
-  display: none;
-}
-
-.home.active, .form.active, .review.active {
-  display: block;
-}
-
-/* Tela de Home */
-.home {
-  text-align: center;
-}
-
-.home button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.home button:hover {
-  background-color: #5cb85c;
-  color: white;
-}
-
-/* Tela de Formulário */
-.form form {
-  background-color: white;
-  padding: 20px;
+  background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
 }
 
-.form h3 {
-  margin-bottom: 15px;
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
 }
 
-.form label {
-  font-size: 14px;
-  margin-bottom: 5px;
+.form-container label {
   display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
 }
 
-.form input[type="text"],
-.form input[type="email"],
-.form input[type="tel"],
-.form input[type="file"] {
+.form-container input {
   width: 100%;
   padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   box-sizing: border-box;
 }
 
-.form input[type="text"]:focus,
-.form input[type="email"]:focus,
-.form input[type="tel"]:focus {
-  border-color: #5cb85c;
-  outline: none;
-}
-
-.form button {
-  padding: 10px 20px;
-  background-color: #5cb85c;
+.form-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-  margin-right: 10px;
 }
 
-.form button:hover {
-  background-color: #4cae4c;
+.form-container button:hover {
+  background-color: #0056b3;
 }
 
-.form button[type="button"] {
-  background-color: #d9534f;
-}
-
-.form button[type="button"]:hover {
-  background-color: #c9302c;
-}
-
-/* Tela de revisão dos formulários */
-.review ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.review li {
-  background-color: white;
-  padding: 15px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
-
-.review li p {
-  margin: 5px 0;
-}
-
-.review img {
-  margin-top: 10px;
-}
-
-/* Placeholder nos campos de entrada */
-input::placeholder {
-  color: #aaa;
-  font-style: italic;
-}
-
-/* Deletar ticket */
-.delete-button {
-  background-color: transparent;
-  border: none;
-  color: #d9534f;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 5px;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.review li:hover .delete-button {
-  background-color: #f8d7da;
-  color: #842029;
-  transform: scale(1.1);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Estilo para a caixa de confirmação */
-.confirmation-box {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 20px;
-  border-radius: 8px;
-  z-index: 100;
-  text-align: center;
-}
-
-.confirmation-box button {
-  margin: 10px;
+.logout-button {
+  display: block;
+  margin: 20px auto;
   padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
+  background-color: #dc3545;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
-.confirmation-box button:first-child {
-  background-color: #ff4d4d;  /* Cor para 'Sim' */
-}
-
-.confirmation-box button:last-child {
-  background-color: #4CAF50;  /* Cor para 'Cancelar' */
-}
-
-.confirmation-box button:hover {
-  opacity: 0.8;
-}
-
-/* Estilos para a mensagem de erro de telefone */
-.error {
-  color: red;
-  font-size: 12px;
-  margin-top: 5px;
+.logout-button:hover {
+  background-color: #c82333;
 }

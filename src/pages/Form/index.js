@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api'; // Certifique-se de ajustar o caminho conforme necessário
+import './styles.css'; // Importe o arquivo CSS
 
 const Form = () => {
   const navigate = useNavigate();
@@ -35,12 +36,14 @@ const Form = () => {
   };
 
   return (
-    <div>
-      <button onClick={handleLogout}>Logout</button>
+    <div className="form-container">
+      <button className="logout-button" onClick={handleLogout}>Logout</button>
+      <h2>Formulário de Chamado</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Motivo:</label>
+          <label htmlFor="motivo">Motivo:</label>
           <input
+            id="motivo"
             type="text"
             value={motivo}
             onChange={(e) => setCallReason(e.target.value)}
@@ -49,8 +52,9 @@ const Form = () => {
           />
         </div>
         <div>
-          <label>Setor:</label>
+          <label htmlFor="setor">Setor:</label>
           <input
+            id="setor"
             type="text"
             value={setor}
             onChange={(e) => setSector(e.target.value)}
@@ -59,8 +63,9 @@ const Form = () => {
           />
         </div>
         <div>
-          <label>Problema:</label>
+          <label htmlFor="problema">Problema:</label>
           <input
+            id="problema"
             type="text"
             value={problema}
             onChange={(e) => setProblem(e.target.value)}
