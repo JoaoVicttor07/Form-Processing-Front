@@ -53,8 +53,7 @@ function Signup() {
     setFieldErrors(errors);
     setPriorityError(firstError); // Define o erro prioritário
     return !firstError; // Retorna true se não houver erros
-};
-
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault(); // Prevenir comportamento padrão do formulário
@@ -120,7 +119,7 @@ function Signup() {
           <label htmlFor="senha">Senha:</label>
           <input
             id="senha"
-            type="senha"
+            type="password"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
             className={fieldErrors.senha ? 'input-error' : ''}
@@ -131,11 +130,11 @@ function Signup() {
           <label htmlFor="confirmSenha">Confirme a Senha:</label>
           <input
             id="confirmSenha"
-            type="senha"
+            type="password"
             value={confirmSenha}
             onChange={(e) => setConfirmSenha(e.target.value)}
-            className={fieldErrors.senha ? 'input-error' : ''}
-            aria-invalid={fieldErrors.senha ? 'true' : 'false'}
+            className={fieldErrors.confirmSenha ? 'input-error' : ''}
+            aria-invalid={fieldErrors.confirmSenha ? 'true' : 'false'}
           />
         </div>
         <button type="submit" disabled={loading} className="button-loading">

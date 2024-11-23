@@ -113,7 +113,7 @@ function Login() {
         </label>
         <input
           id="senha"
-          type="senha"
+          type="password"
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
           className={fieldErrors.senha ? 'input-error' : ''}
