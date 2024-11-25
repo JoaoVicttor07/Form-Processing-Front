@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import RealTimeStats from '../../pages/RealTimesStats';
 import './styles.css';
 
 function AdminDashboard() {
@@ -123,6 +124,11 @@ function AdminDashboard() {
           </ul>
         </div>
       )}
+
+      {}    
+      <div className="real-time-stats-container">
+        <RealTimeStats />
+      </div>
     </div>
   );
 }

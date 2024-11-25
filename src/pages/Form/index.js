@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api'; 
+import RealTimeStats from '../../pages/RealTimesStats';
 import './styles.css'; 
 
 const Form = () => {
@@ -97,7 +98,12 @@ const Form = () => {
         Meus Formulários
       </button>
 
+      <div className="real-time-stats-container">
+        <RealTimeStats />
+      </div>
     </div>
+      
+    
   );
 };
 

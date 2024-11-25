@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import RealTimeStats from '../../pages/RealTimesStats';
 
 const MeusFormularios = () => {
   const [formularios, setFormularios] = useState([]);
@@ -66,6 +67,10 @@ const MeusFormularios = () => {
           )}
         </ul>
       )}
+
+      <div className="real-time-stats-container">
+        <RealTimeStats />
+      </div>
     </div>
   );
 };
