@@ -42,19 +42,15 @@ const AdminDashboard = () => {
     setFilters({ ...filters, [name]: value });
   };
 
-  const filteredTickets = tickets.filter(ticket => {
-    return (
-      (filters.status === '' || ticket.status === filters.status) &&
-      (filters.setor === '' || ticket.setor.toLowerCase().includes(filters.setor.toLowerCase())) &&
-      (filters.date === '' || new Date(ticket.date).toLocaleDateString() === new Date(filters.date).toLocaleDateString())
-    );
-  });
-
   const handleStatusChange = async (id, status) => {
     try {
       const token = localStorage.getItem('authToken');
       console.log(`Alterando status do ticket ${id} para ${status}`);
-      const response = await api.patch(`/form/update/${id}`, { status }, {
+      const ticket = tickets.find(ticket => ticket.id === id);
+      const response = await api.patch(`/form/update/${id}`, {
+        ...ticket,
+        status
+      }, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -64,21 +60,36 @@ const AdminDashboard = () => {
       setSelectedTicket(null);
     } catch (error) {
       console.error('Erro ao alterar status do ticket:', error);
+      if (error.response) {
+        console.error('Detalhes do erro:', error.response.data);
+      }
     }
   };
 
-  const handleDeleteTicket = async (id) => {
+  const handleRejectTicket = async (id) => {
+    await handleStatusChange(id, 'REJEITADO');
+  };
+
+  const filteredTickets = tickets.filter(ticket => {
+    return (
+      (filters.status === '' || ticket.status === filters.status) &&
+      (filters.setor === '' || ticket.setor.toLowerCase().includes(filters.setor.toLowerCase())) &&
+      (filters.date === '' || (ticket.date && parseDate(ticket.date).split(' ')[0] === filters.date))
+    );
+  });
+
+  const parseDate = (dateString) => {
+    if (!dateString) return 'Data inválida';
     try {
-      const token = localStorage.getItem('authToken');
-      await api.delete(`/form/delete/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setTickets(tickets.filter(ticket => ticket.id !== id));
-      setSelectedTicket(null);
+      console.log('Original dateString:', dateString);
+      const formattedDate = dateString.replace(' ', 'T');
+      console.log('Formatted dateString:', formattedDate);
+      const date = new Date(formattedDate);
+      console.log('Parsed date:', date);
+      return date.toLocaleString(); // Exibe data no formato local
     } catch (error) {
-      console.error('Erro ao excluir ticket:', error);
+      console.error('Erro ao formatar a data:', error);
+      return 'Data inválida';
     }
   };
 
@@ -115,7 +126,7 @@ const AdminDashboard = () => {
                   onClick={() => setSelectedTicket(ticket)}
                   className={selectedTicket && selectedTicket.id === ticket.id ? 'selected' : ''}
                 >
-                  {ticket.id} - {ticket.motivo} - {ticket.status} - {new Date(ticket.date).toLocaleDateString()}
+                  {ticket.id} - {ticket.motivo} - {ticket.status} - {parseDate(ticket.date)}
                 </li>
               ))}
             </ul>
@@ -129,10 +140,10 @@ const AdminDashboard = () => {
             <p>Setor: {selectedTicket.setor}</p>
             <p>Problema: {selectedTicket.problema}</p>
             <p>Status: {selectedTicket.status}</p>
-            <p>Data: {new Date(selectedTicket.date).toLocaleDateString()}</p>
+            <p>Data de Criação: {parseDate(selectedTicket.date)}</p>
             <button className="close" onClick={() => setSelectedTicket(null)}>Fechar</button>
             <button className="resolve" onClick={() => handleStatusChange(selectedTicket.id, 'APROVADO')}>Marcar como Aprovado</button>
-            <button className="delete" onClick={() => handleDeleteTicket(selectedTicket.id)}>Excluir</button>
+            <button className="delete" onClick={() => handleRejectTicket(selectedTicket.id)}>Rejeitar</button>
           </div>
         )}
       </div>
