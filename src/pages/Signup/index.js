@@ -91,41 +91,43 @@ function Signup() {
   };
 
   return (
+    <div>
+      <img src= "/logoyour.png" alt=" logo" />
     <div className="signup-container">
       <h2>Cadastro de Usuário</h2>
       {error && <div className="error-message">{error}</div>}
       <div>
-        <label>Nome:</label>
         {nameError && <span className="error-asterisk">*</span>}
         <input
           type="text"
+          placeholder=' Nome'
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
       </div>
       <div>
-        <label>Email:</label>
         {emailError && <span className="error-asterisk">*</span>}
         <input
           type="email"
+          placeholder=' Email'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
       <div>
-        <label>Senha:</label>
         {passwordError && <span className="error-asterisk">*</span>}
         <input
           type="password"
+          placeholder=' Senha'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
       <div>
-        <label>Confirmar Senha:</label>
         {confirmPasswordError && <span className="error-asterisk">*</span>}
         <input
           type="password"
+          placeholder=' Confirme sua senha'
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
@@ -143,6 +145,7 @@ function Signup() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }
