@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api'; // Certifique-se de ajustar o caminho conforme necessário
-import './styles.css'; // Importe o arquivo CSS
+import api from '../../services/api'; 
+import './styles.css'; 
 
 const Form = () => {
   const navigate = useNavigate();
   const [motivo, setCallReason] = useState('');
   const [setor, setSector] = useState('');
   const [problema, setProblem] = useState('');
+  const [showModal, setShowModal] = useState(false); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Enviando formulário...');
 
     try {
       const response = await api.post('/form/create', {
@@ -20,19 +20,23 @@ const Form = () => {
         problema,
       });
 
-      if (response.status === 200) {
-        console.log('Formulário enviado com sucesso!');
+      if (response.status === 200 || response.status === 201) {
+        setShowModal(true); 
       } else {
-        console.log('Erro ao enviar o formulário:', response.statusText);
+        setShowModal(true); 
       }
     } catch (error) {
-      console.log('Erro ao enviar o formulário:', error.message);
+      setShowModal(true); 
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     navigate('/signin');
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -75,6 +79,15 @@ const Form = () => {
         </div>
         <button type="submit">Enviar</button>
       </form>
+
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Formulário cadastrado com sucesso!</h3>
+            <button onClick={closeModal}>Ok</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
