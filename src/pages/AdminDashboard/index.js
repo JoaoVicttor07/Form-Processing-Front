@@ -1,130 +1,143 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 import './styles.css';
 
-function AdminDashboard() {
+const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [supportForms, setSupportForms] = useState([]);
-  const [logs, setLogs] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [selectedForm, setSelectedForm] = useState(null);
-  const [filter, setFilter] = useState({ status: '', date: '', sector: '' });
+  const [tickets, setTickets] = useState([]);
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [filters, setFilters] = useState({ status: '', setor: '', date: '' });
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      navigate('/signin');
-    }
-    // Fetch data from backend (simulação)
-    setSupportForms([
-      // Dados simulados
-      { id: 1, reason: 'Problema 1', sector: 'TI', status: 'Pendente', date: '05-10-2024' },
-      { id: 2, reason: 'Problema 2', sector: 'RH', status: 'Resolvido', date: '03-10-2024' },
-    ]);
-    setLogs([
-      // Dados simulados
-      { id: 1, adminId: 1, formId: 1, changes: 'Status alterado para resolvido', date: '05-10-2024' },
-    ]);
-    setNotifications([
-      // Dados simulados
-      { id: 1, formId: 1, message: 'Seu problema foi resolvido', status: 'Enviado', date: '05-10-2024' },
-    ]);
-  }, [navigate]);
+    // Adiciona a classe 'admin-background' ao body quando o componente é montado
+    document.body.classList.add('admin-background');
 
-  const handleFilterChange = (e) => {
-    setFilter({ ...filter, [e.target.name]: e.target.value });
-  };
+    // Remove a classe 'admin-background' do body quando o componente é desmontado
+    return () => {
+      document.body.classList.remove('admin-background');
+    };
+  }, []);
 
-  const handleFormSelect = (form) => {
-    setSelectedForm(form);
-  };
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const response = await api.get('/form/list');
+        setTickets(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar tickets:', error);
+      }
+    };
 
-  const handleStatusChange = (formId, newStatus) => {
-    // Update status in backend (simulação)
-    setSupportForms(supportForms.map(form => form.id === formId ? { ...form, status: newStatus } : form));
-  };
+    fetchTickets();
+  }, []);
 
   const handleLogout = () => {
-    // Remover o token de autenticação do localStorage
     localStorage.removeItem('authToken');
-    console.log('Token removido do localStorage');
-    // Redirecionar para a página de login
     navigate('/signin');
+  };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({ ...filters, [name]: value });
+  };
+
+  const filteredTickets = tickets.filter(ticket => {
+    return (
+      (filters.status === '' || ticket.status === filters.status) &&
+      (filters.setor === '' || ticket.setor.toLowerCase().includes(filters.setor.toLowerCase())) &&
+      (filters.date === '' || new Date(ticket.date).toLocaleDateString() === new Date(filters.date).toLocaleDateString())
+    );
+  });
+
+  const handleStatusChange = async (id, status) => {
+    try {
+      const token = localStorage.getItem('authToken');
+      console.log(`Alterando status do ticket ${id} para ${status}`);
+      const response = await api.patch(`/form/update/${id}`, { status }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log('Resposta da API:', response);
+      setTickets(tickets.map(ticket => (ticket.id === id ? { ...ticket, status } : ticket)));
+      setSelectedTicket(null);
+    } catch (error) {
+      console.error('Erro ao alterar status do ticket:', error);
+    }
+  };
+
+  const handleDeleteTicket = async (id) => {
+    try {
+      const token = localStorage.getItem('authToken');
+      await api.delete(`/form/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setTickets(tickets.filter(ticket => ticket.id !== id));
+      setSelectedTicket(null);
+    } catch (error) {
+      console.error('Erro ao excluir ticket:', error);
+    }
   };
 
   return (
     <div className="admin-dashboard">
-      <nav className="admin-nav">
-        <button onClick={() => setSelectedForm(null)}>Lista de Formulários de Suporte</button>
-        <button onClick={() => setSelectedForm('logs')}>Logs de Ações</button>
-        <button onClick={() => setSelectedForm('notifications')}>Notificações</button>
-        <button onClick={handleLogout}>Logout</button>
-      </nav>
-
-      {!selectedForm && (
-        <div className="support-forms">
-          <h2>Formulários de Suporte</h2>
+      <button className="logout-button" onClick={handleLogout}>Logout</button>
+      <div className="content">
+        <div className="main-content">
           <div className="filters">
-            <input type="text" name="status" placeholder="Status" value={filter.status} onChange={handleFilterChange} />
-            <input type="date" name="date" placeholder="Data de Envio" value={filter.date} onChange={handleFilterChange} />
-            <input type="text" name="sector" placeholder="Setor" value={filter.sector} onChange={handleFilterChange} />
+            <label>
+              Status:
+              <select name="status" value={filters.status} onChange={handleFilterChange}>
+                <option value="">Todos</option>
+                <option value="APROVADO">APROVADO</option>
+                <option value="PENDENTE">PENDENTE</option>
+                <option value="REJEITADO">REJEITADO</option>
+              </select>
+            </label>
+            <label>
+              Setor:
+              <input type="text" name="setor" value={filters.setor} onChange={handleFilterChange} placeholder="Setor responsável" />
+            </label>
+            <label>
+              Data:
+              <input type="date" name="date" value={filters.date} onChange={handleFilterChange} />
+            </label>
           </div>
-          <ul>
-            {supportForms
-              .filter(form => 
-                (filter.status ? form.status.includes(filter.status) : true) &&
-                (filter.date ? form.date.includes(filter.date) : true) &&
-                (filter.sector ? form.sector.includes(filter.sector) : true)
-              )
-              .map(form => (
-                <li key={form.id} onClick={() => handleFormSelect(form)}>
-                  {form.id} - {form.reason} - {form.sector} - {form.status} - {form.date}
+          <div className="ticket-list">
+            <h2>Lista de Tickets</h2>
+            <ul>
+              {filteredTickets.map(ticket => (
+                <li
+                  key={ticket.id}
+                  onClick={() => setSelectedTicket(ticket)}
+                  className={selectedTicket && selectedTicket.id === ticket.id ? 'selected' : ''}
+                >
+                  {ticket.id} - {ticket.motivo} - {ticket.status} - {new Date(ticket.date).toLocaleDateString()}
                 </li>
               ))}
-          </ul>
+            </ul>
+          </div>
         </div>
-      )}
-
-      {selectedForm && selectedForm !== 'logs' && selectedForm !== 'notifications' && (
-        <div className="form-details">
-          <h2>Detalhes do Formulário</h2>
-          <p>ID do Usuário: {selectedForm.userId}</p>
-          <p>Motivo: {selectedForm.reason}</p>
-          <p>Setor: {selectedForm.sector}</p>
-          <p>Status: {selectedForm.status}</p>
-          <p>Mensagem: {selectedForm.message}</p>
-          <p>Data de Envio: {selectedForm.date}</p>
-          <button onClick={() => handleStatusChange(selectedForm.id, 'Resolved')}>Marcar como Resolvido</button>
-        </div>
-      )}
-
-      {selectedForm === 'logs' && (
-        <div className="logs">
-          <h2>Logs de Ações</h2>
-          <ul>
-            {logs.map(log => (
-              <li key={log.id}>
-                {log.id} - Admin {log.adminId} - Form {log.formId} - {log.changes} - {log.date}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {selectedForm === 'notifications' && (
-        <div className="notifications">
-          <h2>Notificações</h2>
-          <ul>
-            {notifications.map(notification => (
-              <li key={notification.id}>
-                {notification.id} - Form {notification.formId} - {notification.message} - {notification.status} - {notification.date}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+        {selectedTicket && (
+          <div className="ticket-details">
+            <h2>Detalhes do Ticket</h2>
+            <p>ID: {selectedTicket.id}</p>
+            <p>Motivo: {selectedTicket.motivo}</p>
+            <p>Setor: {selectedTicket.setor}</p>
+            <p>Problema: {selectedTicket.problema}</p>
+            <p>Status: {selectedTicket.status}</p>
+            <p>Data: {new Date(selectedTicket.date).toLocaleDateString()}</p>
+            <button className="close" onClick={() => setSelectedTicket(null)}>Fechar</button>
+            <button className="resolve" onClick={() => handleStatusChange(selectedTicket.id, 'APROVADO')}>Marcar como Aprovado</button>
+            <button className="delete" onClick={() => handleDeleteTicket(selectedTicket.id)}>Excluir</button>
+          </div>
+        )}
+      </div>
     </div>
   );
-}
+};
 
 export default AdminDashboard;
