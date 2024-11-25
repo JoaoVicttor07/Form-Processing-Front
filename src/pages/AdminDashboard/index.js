@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import RealTimeStats from '../../pages/RealTimesStats';
 import './styles.css';
 
 const AdminDashboard = () => {
@@ -147,6 +148,9 @@ const AdminDashboard = () => {
             <button className="delete" onClick={() => handleRejectTicket(selectedTicket.id)}>Rejeitar</button>
           </div>
         )}
+      </div>
+      <div className="real-time-stats-container">
+        <RealTimeStats />
       </div>
     </div>
   );

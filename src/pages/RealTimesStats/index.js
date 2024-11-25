@@ -30,17 +30,17 @@ function RealTimeStats() {
     }, []);
 
     return (
-        <div>
-            <h1>Real-Time Statistics</h1>
+        <div className="real-time-stats">
+            <h1>Estatísticas em tempo real</h1>
             {loading ? (
                 <p>Loading...</p>
             ) : error ? (
                 <p style={{ color: 'red' }}>Error: {error}</p>
             ) : (
                 <>
-                    <p>Total Users: {data.totalUsers}</p>
-                    <p>Total Forms: {data.totalForms}</p>
-                    <p>Pending Forms: {data.pendingForms}</p>
+                    <p>Número de usuários que se beneficiam do nosso sistema: {data.totalUsers}</p>
+                    <p>Número de formulários criados: {data.totalForms}</p>
+                    <p>Número de formulários pendentes: {data.pendingForms}</p>
                 </>
             )}
         </div>

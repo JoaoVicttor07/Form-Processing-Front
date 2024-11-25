@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // Importa o decodificador JWT
-import api from '../../services/api'; // Importe a configuração da API
+import { jwtDecode } from 'jwt-decode';
+import api from '../../services/api'; 
+import RealTimeStats from '../../pages/RealTimesStats'; 
 import './styles.css';
 
 function Login() {
@@ -18,7 +19,7 @@ function Login() {
   };
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevenir o comportamento padrão do formulário
+    e.preventDefault();
     const errors = { email: false, senha: false };
     setFieldErrors(errors);
     setGeneralError('');
@@ -34,7 +35,6 @@ function Login() {
 
     setFieldErrors(errors);
 
-    // Interrompendo se houver qualquer erro
     if (errors.email || errors.senha) return;
 
     setLoading(true);
@@ -48,7 +48,6 @@ function Login() {
         const { token } = response.data;
         console.log('Token recebido:', token);
 
-        // Decodificar o token para extrair o campo role
         let role;
         try {
           const decoded = jwtDecode(token);
@@ -60,10 +59,8 @@ function Login() {
           return;
         }
 
-        // Armazenar o token no localStorage
         localStorage.setItem('authToken', token);
 
-        // Redirecionar com base no role
         if (role === 'ADMIN') {
           console.log('Usuário é ADMIN, redirecionando para /AdminDashboard');
           navigate('/AdminDashboard');
@@ -132,6 +129,11 @@ function Login() {
       </button>
       <div className="signup-link">
         <p>Não tem uma conta? <Link to="/signup">Cadastre-se</Link></p>
+      </div>
+
+      {}
+      <div className="real-time-stats-container">
+        <RealTimeStats />
       </div>
     </div>
   );
