@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../../services/api'; // Importe a configuração da API
+import api from '../../services/api';
 import './styles.css';
 
 function Signup() {
@@ -10,7 +10,7 @@ function Signup() {
   const [senha, setSenha] = useState('');
   const [confirmSenha, setConfirmSenha] = useState('');
   const [fieldErrors, setFieldErrors] = useState({ nome: '', email: '', senha: '', confirmSenha: '' });
-  const [priorityError, setPriorityError] = useState(''); // Novo estado para erro prioritário
+  const [priorityError, setPriorityError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -19,13 +19,20 @@ function Signup() {
     return re.test(email);
   };
 
+  const sanitizeInput = (input) => {
+    return input.replace(/[^a-zA-Z0-9 ]/g, '');
+  };
+
   const validateFields = () => {
     const errors = { nome: '', email: '', senha: '', confirmSenha: '' };
-    let firstError = ''; // Mensagem do erro prioritário
+    let firstError = '';
 
     // Validações
     if (!nome) {
         errors.nome = 'O campo nome é obrigatório.';
+        firstError = firstError || errors.nome;
+    } else if (nome !== sanitizeInput(nome)) {
+        errors.nome = 'O campo nome contém caracteres inválidos.';
         firstError = firstError || errors.nome;
     }
     if (!email) {
@@ -38,7 +45,7 @@ function Signup() {
     if (!senha) {
         errors.senha = 'O campo senha é obrigatório.';
         firstError = firstError || errors.senha;
-    } else if (senha.length < 6) { // Condição para no mínimo 6 caracteres
+    } else if (senha.length < 6) {
         errors.senha = 'A senha deve ter no mínimo 6 caracteres.';
         firstError = firstError || errors.senha;
     }
@@ -51,24 +58,23 @@ function Signup() {
     }
 
     setFieldErrors(errors);
-    setPriorityError(firstError); // Define o erro prioritário
-    return !firstError; // Retorna true se não houver erros
+    setPriorityError(firstError);
+    return !firstError; 
   };
 
   const handleSignup = async (e) => {
-    e.preventDefault(); // Prevenir comportamento padrão do formulário
+    e.preventDefault();
     setFieldErrors({ nome: '', email: '', senha: '', confirmSenha: '' });
     setPriorityError('');
     setSuccess(false);
 
-    if (!validateFields()) return; // Interrompe se houver erros
+    if (!validateFields()) return;
 
     setLoading(true);
 
     try {
-      console.log('Enviando dados para a API:', { nome, email, senha });
-      const response = await api.post('/auth/register', { nome, email, senha });
-      console.log('Resposta da API:', response);
+      const sanitizedNome = sanitizeInput(nome);
+      const response = await api.post('/auth/register', { nome: sanitizedNome, email, senha });
 
       if (response.status === 200 || response.status === 201) {
         setSuccess(true);
@@ -100,7 +106,7 @@ function Signup() {
             id="nome"
             type="text"
             value={nome}
-            onChange={(e) => setNome(e.target.value)}
+            onChange={(e) => setNome(sanitizeInput(e.target.value))}
             className={fieldErrors.nome ? 'input-error' : ''}
           />
         </div>
