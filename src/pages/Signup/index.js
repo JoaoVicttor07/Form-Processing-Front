@@ -90,51 +90,51 @@ function Signup() {
 
   return (
     <div className="signup-container">
-      <h2>Crie sua conta</h2>
-      {priorityError && <div className="error-message" aria-live="polite">{priorityError}</div>}
+      <h2>Cadastro de Usuário</h2>
+      {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSignup}>
         <div>
           <label htmlFor="nome">Nome:</label>
+          {fieldErrors.nome && <span className="error-asterisk">*</span>}
           <input
             id="nome"
             type="text"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             className={fieldErrors.nome ? 'input-error' : ''}
-            aria-invalid={fieldErrors.nome ? 'true' : 'false'}
           />
         </div>
         <div>
           <label htmlFor="email">Email:</label>
+          {fieldErrors.email && <span className="error-asterisk">*</span>}
           <input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={fieldErrors.email ? 'input-error' : ''}
-            aria-invalid={fieldErrors.email ? 'true' : 'false'}
           />
         </div>
         <div>
           <label htmlFor="senha">Senha:</label>
+          {fieldErrors.senha && <span className="error-asterisk">*</span>}
           <input
             id="senha"
             type="password"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
             className={fieldErrors.senha ? 'input-error' : ''}
-            aria-invalid={fieldErrors.senha ? 'true' : 'false'}
           />
         </div>
         <div>
-          <label htmlFor="confirmSenha">Confirme a Senha:</label>
+          <label htmlFor="confirmSenha">Confirme sua senha:</label>
+          {fieldErrors.confirmSenha && <span className="error-asterisk">*</span>}
           <input
             id="confirmSenha"
             type="password"
             value={confirmSenha}
             onChange={(e) => setConfirmSenha(e.target.value)}
             className={fieldErrors.confirmSenha ? 'input-error' : ''}
-            aria-invalid={fieldErrors.confirmSenha ? 'true' : 'false'}
           />
         </div>
         <button type="submit" disabled={loading} className="button-loading">

@@ -27,6 +27,7 @@ img {
   backdrop-filter: blur(30px);
   border: 0.1px solid #ffffff9e;
   border-radius: 19px;
+  overflow: hidden;
   
   max-width: 400px;
   width: 100%;
@@ -70,19 +71,18 @@ img {
   background: transparent;
   border-radius: 8px;
   box-sizing: border-box;
-  transition: border-color 0.3s, box-shadow 0.9s, width 0.3s;
+  transition: border-color 0.3s, box-shadow 0.9s, transform 0.3s;
 }
 
 .login-container input:focus {
   border-color: #ffffff;
   box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.3);
-  width: 257px;
   outline: none;
 }
 
 .login-container input:hover {
   border-color: #ffffff;
-  width: 257px;
+  transform: scale(1.03);
   outline: none;
 }
 
@@ -96,12 +96,12 @@ img {
   background-color: #ffffff;
   color: rgb(0, 0, 0);
   width: 250px;
-  transition: background-color 0.3s ease, width 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  transition: background-color 0.3s ease, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .login-container button:hover {
   background-color: #ffffff;
-  width: 257px;
+  transform: scale(1.03);
   box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.3);
 }
 
