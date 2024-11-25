@@ -1,87 +1,91 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import api from '../../services/api'; // Importe a configuração da API
 import './styles.css';
 
 function Signup() {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
+  const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [nameError, setNameError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [senha, setSenha] = useState('');
+  const [confirmSenha, setConfirmSenha] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({ nome: '', email: '', senha: '', confirmSenha: '' });
+  const [priorityError, setPriorityError] = useState(''); // Novo estado para erro prioritário
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   };
 
-  const handleSignup = () => {
-    setNameError(false);
-    setEmailError(false);
-    setPasswordError(false);
-    setConfirmPasswordError(false);
-    setError('');
+  const validateFields = () => {
+    const errors = { nome: '', email: '', senha: '', confirmSenha: '' };
+    let firstError = ''; // Mensagem do erro prioritário
+
+    // Validações
+    if (!nome) {
+        errors.nome = 'O campo nome é obrigatório.';
+        firstError = firstError || errors.nome;
+    }
+    if (!email) {
+        errors.email = 'O campo email é obrigatório.';
+        firstError = firstError || errors.email;
+    } else if (!validateEmail(email)) {
+        errors.email = 'Formato de email inválido.';
+        firstError = firstError || errors.email;
+    }
+    if (!senha) {
+        errors.senha = 'O campo senha é obrigatório.';
+        firstError = firstError || errors.senha;
+    } else if (senha.length < 6) { // Condição para no mínimo 6 caracteres
+        errors.senha = 'A senha deve ter no mínimo 6 caracteres.';
+        firstError = firstError || errors.senha;
+    }
+    if (!confirmSenha) {
+        errors.confirmSenha = 'Confirmação de senha é obrigatória.';
+        firstError = firstError || errors.confirmSenha;
+    } else if (senha !== confirmSenha) {
+        errors.confirmSenha = 'As senhas não coincidem.';
+        firstError = firstError || errors.confirmSenha;
+    }
+
+    setFieldErrors(errors);
+    setPriorityError(firstError); // Define o erro prioritário
+    return !firstError; // Retorna true se não houver erros
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault(); // Prevenir comportamento padrão do formulário
+    setFieldErrors({ nome: '', email: '', senha: '', confirmSenha: '' });
+    setPriorityError('');
     setSuccess(false);
 
-    if (!name && !email && !password && !confirmPassword) {
-      setNameError(true);
-      setEmailError(true);
-      setPasswordError(true);
-      setConfirmPasswordError(true);
-      setError('Todos os campos são obrigatórios.');
-      return;
-    }
+    if (!validateFields()) return; // Interrompe se houver erros
 
-    if (!name) {
-      setNameError(true);
-      setError('O campo nome é obrigatório.');
-      return;
-    }
+    setLoading(true);
 
-    if (!email) {
-      setEmailError(true);
-      setError('O campo email é obrigatório.');
-      return;
-    }
+    try {
+      console.log('Enviando dados para a API:', { nome, email, senha });
+      const response = await api.post('/auth/register', { nome, email, senha });
+      console.log('Resposta da API:', response);
 
-    if (!validateEmail(email)) {
-      setEmailError(true);
-      setError('Formato de email inválido.');
-      return;
+      if (response.status === 200 || response.status === 201) {
+        setSuccess(true);
+      } else {
+        setPriorityError('Erro ao criar conta, tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao criar conta:', error);
+      if (error.response) {
+        console.error('Dados da resposta de erro:', error.response.data);
+        setPriorityError(error.response.data.message || 'Erro ao criar conta, tente novamente.');
+      } else {
+        setPriorityError('Erro ao criar conta, tente novamente.');
+      }
+    } finally {
+      setLoading(false);
     }
-
-    if (!password) {
-      setPasswordError(true);
-      setError('O campo senha é obrigatório.');
-      return;
-    }
-
-    if (password.length < 6) {
-      setPasswordError(true);
-      setError('A senha deve ter pelo menos 6 caracteres.');
-      return;
-    }
-
-    if (!confirmPassword) {
-      setConfirmPasswordError(true);
-      setError('O campo confirmar senha é obrigatório.');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setPasswordError(true);
-      setConfirmPasswordError(true);
-      setError('As senhas não coincidem.');
-      return;
-    }
-
-    console.log('Cadastro realizado:', { name, email, password });
-    setSuccess(true);
   };
 
   return (
@@ -90,46 +94,64 @@ function Signup() {
       {priorityError && <div className="error-message">{priorityError}</div>}
       <form onSubmit={handleSignup}>
         <div>
-          {nameError && <span className="error-asterisk">*</span>}
+          <label htmlFor="nome">Nome:</label>
+          {fieldErrors.nome && <span className="error-asterisk">*</span>}
           <input
+            id="nome"
             type="text"
-            placeholder="Nome"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            className={fieldErrors.nome ? 'input-error' : ''}
           />
         </div>
         <div>
-          {emailError && <span className="error-asterisk">*</span>}
+          <label htmlFor="email">Email:</label>
+          {fieldErrors.email && <span className="error-asterisk">*</span>}
           <input
+            id="email"
             type="email"
-            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className={fieldErrors.email ? 'input-error' : ''}
           />
         </div>
         <div>
-          {passwordError && <span className="error-asterisk">*</span>}
+          <label htmlFor="senha">Senha:</label>
+          {fieldErrors.senha && <span className="error-asterisk">*</span>}
           <input
+            id="senha"
             type="password"
-            placeholder="Senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            className={fieldErrors.senha ? 'input-error' : ''}
           />
         </div>
         <div>
-          {confirmPasswordError && <span className="error-asterisk">*</span>}
+          <label htmlFor="confirmSenha">Confirme sua senha:</label>
+          {fieldErrors.confirmSenha && <span className="error-asterisk">*</span>}
           <input
+            id="confirmSenha"
             type="password"
-            placeholder="Confirme sua senha"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={confirmSenha}
+            onChange={(e) => setConfirmSenha(e.target.value)}
+            className={fieldErrors.confirmSenha ? 'input-error' : ''}
           />
         </div>
-        <button onClick={handleSignup}>Cadastrar</button>
-        <div className="login-link">
-          <p>Já tem uma conta? <Link to="/">Faça login</Link></p>
-        </div>
+        <button type="submit" disabled={loading} className="button-loading">
+          {loading ? (
+            <>
+              Carregando...
+              <div className="spinner"></div>
+            </>
+          ) : (
+            'Cadastrar'
+          )}
+        </button>
+      </form>
+      <div className="login-link">
+        <p>Já tem uma conta? <Link to="/">Faça login</Link></p>
       </div>
+
       {success && (
         <div className="modal">
           <div className="modal-content">
