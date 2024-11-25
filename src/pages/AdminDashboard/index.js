@@ -71,10 +71,11 @@ const AdminDashboard = () => {
   };
 
   const filteredTickets = tickets.filter(ticket => {
+    const ticketDate = new Date(ticket.dataCriacao).toISOString().split('T')[0];
     return (
       (filters.status === '' || ticket.status === filters.status) &&
       (filters.setor === '' || ticket.setor.toLowerCase().includes(filters.setor.toLowerCase())) &&
-      (filters.date === '' || (ticket.date && parseDate(ticket.date).split(' ')[0] === filters.date))
+      (filters.date === '' || ticketDate === filters.date)
     );
   });
 
@@ -126,7 +127,7 @@ const AdminDashboard = () => {
                   onClick={() => setSelectedTicket(ticket)}
                   className={selectedTicket && selectedTicket.id === ticket.id ? 'selected' : ''}
                 >
-                  {ticket.id} - {ticket.motivo} - {ticket.status} - {parseDate(ticket.date)}
+                  {ticket.id} - {ticket.motivo} - {ticket.status} - {parseDate(ticket.dataCriacao)}
                 </li>
               ))}
             </ul>
@@ -140,7 +141,7 @@ const AdminDashboard = () => {
             <p>Setor: {selectedTicket.setor}</p>
             <p>Problema: {selectedTicket.problema}</p>
             <p>Status: {selectedTicket.status}</p>
-            <p>Data de Criação: {parseDate(selectedTicket.date)}</p>
+            <p>Data de Criação: {parseDate(selectedTicket.dataCriacao)}</p>
             <button className="close" onClick={() => setSelectedTicket(null)}>Fechar</button>
             <button className="resolve" onClick={() => handleStatusChange(selectedTicket.id, 'APROVADO')}>Marcar como Aprovado</button>
             <button className="delete" onClick={() => handleRejectTicket(selectedTicket.id)}>Rejeitar</button>
