@@ -6,6 +6,7 @@ import Signup from './pages/Signup';
 import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/protectedRoute';
 import RealTimeStats from './pages/RealTimesStats';
+import MeusFormularios from './pages/MeusFormularios';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/AdminDashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path="*" element={<h1>Not Found</h1>} />
         <Route path="/dados" element={<RealTimeStats/>} />
+        <Route path="/meus-formularios" element={<MeusFormularios />} />
       </Routes>
     </Router>
   );

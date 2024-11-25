@@ -39,6 +39,10 @@ const Form = () => {
     setShowModal(false);
   };
 
+  const navigateToMeusFormularios = () => {
+    navigate('/meus-formularios');
+  };
+
   return (
     <div className="form-container">
       <button className="logout-button" onClick={handleLogout}>Logout</button>
@@ -88,6 +92,11 @@ const Form = () => {
           </div>
         </div>
       )}
+
+      <button onClick={navigateToMeusFormularios} className="meus-formularios-button">
+        Meus Formulários
+      </button>
+
     </div>
   );
 };

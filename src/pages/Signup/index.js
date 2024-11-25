@@ -91,7 +91,7 @@ function Signup() {
   return (
     <div className="signup-container">
       <h2>Cadastro de Usuário</h2>
-      {error && <div className="error-message">{error}</div>}
+      {priorityError && <div className="error-message">{priorityError}</div>}
       <form onSubmit={handleSignup}>
         <div>
           <label htmlFor="nome">Nome:</label>
