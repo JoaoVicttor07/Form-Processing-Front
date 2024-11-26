@@ -41,7 +41,7 @@ function Login() {
 
     try {
       console.log('Enviando requisição para /auth/login com:', { email, senha });
-      const response = await api.post('/auth/login', { email, senha },{ headers: { 'Content-Type': 'application/json' } });
+      const response = await api.post('/auth/login', { email, senha }, { headers: { 'Content-Type': 'application/json' } });
       console.log('Resposta da API:', response);
 
       if (response.status === 200) {
