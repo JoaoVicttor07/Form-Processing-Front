@@ -7,6 +7,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/protectedRoute';
 import RealTimeStats from './pages/RealTimesStats';
 import MeusFormularios from './pages/MeusFormularios';
+import UpdateProfile from './pages/Profile';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="*" element={<h1>Not Found</h1>} />
         <Route path="/dados" element={<RealTimeStats />} />
         <Route path="/meus-formularios" element={<MeusFormularios />} />
+        <Route path="/perfil" element={<UpdateProfile />} />
       </Routes>
     </Router>
   );

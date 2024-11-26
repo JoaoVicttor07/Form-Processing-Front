@@ -83,6 +83,10 @@ const Form = () => {
     setShowFormularios(false);
   };
 
+  const goToUpdateProfile = () => {
+    navigate('/perfil'); // O caminho deve ser o mesmo definido no seu router
+  };
+
   return (
     <div className="form-container">
       {userName ? (
@@ -91,6 +95,7 @@ const Form = () => {
         <p>Bem-vindo, usuário!</p>
       )}
       <button className="logout-button" onClick={handleLogout}>Logout</button>
+      <button className="update-profile-button" onClick={goToUpdateProfile}>Atualizar Perfil</button>
       <h2>Formulário de Chamado</h2>
       <form onSubmit={handleSubmit}>
         <div>
