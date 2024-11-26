@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../../services/api';
+import ReCAPTCHA from 'react-google-recaptcha';
 import './styles.css';
 
 function Signup() {
@@ -9,6 +10,7 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmSenha, setConfirmSenha] = useState('');
+  const [captchaValidated, setCaptchaValidated] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({ nome: '', email: '', senha: '', confirmSenha: '' });
   const [priorityError, setPriorityError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -27,39 +29,42 @@ function Signup() {
     const errors = { nome: '', email: '', senha: '', confirmSenha: '' };
     let firstError = '';
 
-    // Validações
     if (!nome) {
-        errors.nome = 'O campo nome é obrigatório.';
-        firstError = firstError || errors.nome;
+      errors.nome = 'O campo nome é obrigatório.';
+      firstError = firstError || errors.nome;
     } else if (nome !== sanitizeInput(nome)) {
-        errors.nome = 'O campo nome contém caracteres inválidos.';
-        firstError = firstError || errors.nome;
+      errors.nome = 'O campo nome contém caracteres inválidos.';
+      firstError = firstError || errors.nome;
     }
     if (!email) {
-        errors.email = 'O campo email é obrigatório.';
-        firstError = firstError || errors.email;
+      errors.email = 'O campo email é obrigatório.';
+      firstError = firstError || errors.email;
     } else if (!validateEmail(email)) {
-        errors.email = 'Formato de email inválido.';
-        firstError = firstError || errors.email;
+      errors.email = 'Formato de email inválido.';
+      firstError = firstError || errors.email;
     }
     if (!senha) {
-        errors.senha = 'O campo senha é obrigatório.';
-        firstError = firstError || errors.senha;
+      errors.senha = 'O campo senha é obrigatório.';
+      firstError = firstError || errors.senha;
     } else if (senha.length < 6) {
-        errors.senha = 'A senha deve ter no mínimo 6 caracteres.';
-        firstError = firstError || errors.senha;
+      errors.senha = 'A senha deve ter no mínimo 6 caracteres.';
+      firstError = firstError || errors.senha;
     }
     if (!confirmSenha) {
-        errors.confirmSenha = 'Confirmação de senha é obrigatória.';
-        firstError = firstError || errors.confirmSenha;
+      errors.confirmSenha = 'Confirmação de senha é obrigatória.';
+      firstError = firstError || errors.confirmSenha;
     } else if (senha !== confirmSenha) {
-        errors.confirmSenha = 'As senhas não coincidem.';
-        firstError = firstError || errors.confirmSenha;
+      errors.confirmSenha = 'As senhas não coincidem.';
+      firstError = firstError || errors.confirmSenha;
     }
 
     setFieldErrors(errors);
     setPriorityError(firstError);
     return !firstError; 
+  };
+
+  const handleCaptchaChange = (value) => {
+    setCaptchaValidated(!!value);
   };
 
   const handleSignup = async (e) => {
@@ -68,7 +73,10 @@ function Signup() {
     setPriorityError('');
     setSuccess(false);
 
-    if (!validateFields()) return;
+    if (!validateFields() || !captchaValidated) {
+      setPriorityError('Por favor, complete todos os campos e valide o CAPTCHA.');
+      return;
+    }
 
     setLoading(true);
 
@@ -143,7 +151,11 @@ function Signup() {
             className={fieldErrors.confirmSenha ? 'input-error' : ''}
           />
         </div>
-        <button type="submit" disabled={loading} className="button-loading">
+        <ReCAPTCHA
+          sitekey="6LcBHYsqAAAAAIz6nDnaCMMlKOtEAsg5rsc80jkM"
+          onChange={handleCaptchaChange}
+        />
+        <button type="submit" disabled={!captchaValidated || loading} className="button-loading">
           {loading ? (
             <>
               Carregando...
