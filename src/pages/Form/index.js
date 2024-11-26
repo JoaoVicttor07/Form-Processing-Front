@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api'; 
 import RealTimeStats from '../../pages/RealTimesStats';
@@ -24,6 +24,7 @@ const Form = () => {
       setUserName(nome);
     }
   }, []);
+  const [showFormularios, setShowFormularios] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,10 +56,6 @@ const Form = () => {
     setShowModal(false);
   };
 
-  const navigateToMeusFormularios = () => {
-    navigate('/meus-formularios');
-  };
-
   const fetchFormularios = async () => {
     setLoading(true);
     setError(null);
@@ -66,6 +63,7 @@ const Form = () => {
     try {
       const response = await api.get('/form/me');
       setFormularios(response.data);
+      setShowFormularios(true);
     } catch (error) {
       console.error('Erro ao carregar os formulários:', error);
       setError('Não foi possível carregar os formulários. Tente novamente mais tarde.');
@@ -74,9 +72,9 @@ const Form = () => {
     }
   };
 
-  useEffect(() => {
-    fetchFormularios();
-  }, []);
+  const closeFormularios = () => {
+    setShowFormularios(false);
+  };
 
   return (
     <div className="form-container">
@@ -133,7 +131,7 @@ const Form = () => {
         </div>
       )}
 
-      <button onClick={navigateToMeusFormularios} className="meus-formularios-button">
+      <button onClick={fetchFormularios} className="meus-formularios-button">
         Meus Formulários
       </button>
 
@@ -141,27 +139,34 @@ const Form = () => {
         <RealTimeStats />
       </div>
 
-      <h2>Meus Formulários Criados</h2>
-      {loading ? (
-        <p>Carregando formulários...</p>
-      ) : error ? (
-        <p>{error}</p>
-      ) : (
-        <ul>
-          {formularios.length > 0 ? (
-            formularios.map((form) => (
-              <li key={form.id}>
-                <h4>Motivo: {form.motivo}</h4>
-                <p>Setor: {form.setor}</p>
-                <p>Problema: {form.problema}</p>
-                <p>Status: {form.status}</p>
-                <p>Data de Criação: {new Date(form.dataCriacao).toLocaleString()}</p>
-              </li>
-            ))
+      {showFormularios && (
+        <>
+          <h2>Meus Formulários Criados</h2>
+          <button onClick={closeFormularios} className="close-formularios-button">
+            Fechar Formulários
+          </button>
+          {loading ? (
+            <p>Carregando formulários...</p>
+          ) : error ? (
+            <p>{error}</p>
           ) : (
-            <p>Você ainda não criou nenhum formulário.</p>
+            <ul>
+              {formularios.length > 0 ? (
+                formularios.map((form) => (
+                  <li key={form.id}>
+                    <h4>Motivo: {form.motivo}</h4>
+                    <p>Setor: {form.setor}</p>
+                    <p>Problema: {form.problema}</p>
+                    <p>Status: {form.status}</p>
+                    <p>Data de Criação: {new Date(form.dataCriacao).toLocaleString()}</p>
+                  </li>
+                ))
+              ) : (
+                <p>Você ainda não criou nenhum formulário.</p>
+              )}
+            </ul>
           )}
-        </ul>
+        </>
       )}
     </div>
   );
