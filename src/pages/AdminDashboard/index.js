@@ -8,6 +8,8 @@ const AdminDashboard = () => {
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [filters, setFilters] = useState({ status: '', setor: '', date: '' });
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     // Adiciona a classe 'admin-background' ao body quando o componente é montado
@@ -47,13 +49,14 @@ const AdminDashboard = () => {
     setFilters({ ...filters, [name]: value });
   };
 
-  const handleStatusChange = async (id, status) => {
+  const handleStatusChange = async (id, status, message = '') => {
     try {
       const token = localStorage.getItem('authToken');
       const ticket = tickets.find(ticket => ticket.id === id);
       await api.patch(`/form/update/${id}`, {
         ...ticket,
-        status
+        status,
+        mensagem: message
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -61,6 +64,8 @@ const AdminDashboard = () => {
       });
       setTickets(tickets.map(ticket => (ticket.id === id ? { ...ticket, status } : ticket)));
       setSelectedTicket(null);
+      setShowMessageModal(false);
+      setMessage('');
     } catch (error) {
       console.error('Erro ao alterar status do ticket:', error);
       if (error.response) {
@@ -69,8 +74,9 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleRejectTicket = async (id) => {
-    await handleStatusChange(id, 'RESOLVIDO');
+  const handleRejectTicket = (id) => {
+    setSelectedTicket(id);
+    setShowMessageModal(true);
   };
 
   const filteredTickets = tickets.filter(ticket => {
@@ -143,11 +149,27 @@ const AdminDashboard = () => {
             <p>Status: {selectedTicket.status}</p>
             <p>Data de Criação: {parseDate(selectedTicket.dataCriacao)}</p>
             <button className="close" onClick={() => setSelectedTicket(null)}>Fechar</button>
-            <button className="resolve" onClick={() => handleStatusChange(selectedTicket.id, 'ANDAMENTO')}>Marcar como EM ANDAMENTO</button>
-            <button className="delete" onClick={() => handleRejectTicket(selectedTicket.id)}>Rejeitar</button>
+            <button className="resolve" onClick={() => handleStatusChange(selectedTicket.id, 'ANDAMENTO')}>Marcar como em andamento</button>
+            <button className="delete" onClick={() => handleRejectTicket(selectedTicket.id)}>Marcar como resolvido</button>
           </div>
         )}
       </div>
+      {showMessageModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Enviar Mensagem</h3>
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Digite a mensagem para o usuário"
+              rows="4"
+              cols="50"
+            />
+            <button onClick={() => setShowMessageModal(false)}>Fechar</button>
+            <button onClick={() => handleStatusChange(selectedTicket, 'RESOLVIDO', message)}>Confirmar mensagem e enviar</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -8,13 +8,15 @@ import { jwtDecode } from 'jwt-decode';
 const Form = () => {
   const navigate = useNavigate();
   const [motivo, setCallReason] = useState('');
-  const [setor, setSector] = useState('');
+  const [setor, setSector] = useState(''); // Valor padrão vazio
   const [problema, setProblem] = useState('');
   const [showModal, setShowModal] = useState(false); 
   const [formularios, setFormularios] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
+  const [showFormularios, setShowFormularios] = useState(false);
+  const [formError, setFormError] = useState(''); // Estado para mensagem de erro do formulário
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -24,10 +26,14 @@ const Form = () => {
       setUserName(nome);
     }
   }, []);
-  const [showFormularios, setShowFormularios] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (setor === '') {
+      setFormError('Por favor, selecione um setor válido.');
+      return;
+    }
 
     try {
       const response = await api.post('/form/create', {
@@ -39,6 +45,7 @@ const Form = () => {
       if (response.status === 200 || response.status === 201) {
         setShowModal(true); 
         fetchFormularios(); // Atualiza a lista de formulários após a criação
+        setFormError(''); // Limpa a mensagem de erro do formulário
       } else {
         setShowModal(true); 
       }
@@ -99,14 +106,17 @@ const Form = () => {
         </div>
         <div>
           <label htmlFor="setor">Setor:</label>
-          <input
+          <select
             id="setor"
-            type="text"
             value={setor}
             onChange={(e) => setSector(e.target.value)}
-            placeholder="Informe o setor"
             required
-          />
+          >
+            <option value="">Selecione o setor</option>
+            <option value="Técnico">Técnico</option>
+            <option value="Financeiro">Financeiro</option>
+            <option value="Logística">Logística</option>
+          </select>
         </div>
         <div>
           <label htmlFor="problema">Problema:</label>
@@ -119,6 +129,7 @@ const Form = () => {
             required
           />
         </div>
+        {formError && <p style={{ color: 'red' }}>{formError}</p>}
         <button type="submit">Enviar</button>
       </form>
 
