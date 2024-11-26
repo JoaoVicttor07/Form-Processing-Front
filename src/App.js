@@ -15,10 +15,10 @@ function App() {
         <Route path="/" element={<Navigate to="/signin" />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/form" element={<ProtectedRoute><Form /></ProtectedRoute>} />
-        <Route path="/AdminDashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/form" element={<ProtectedRoute role="USER"><Form /></ProtectedRoute>} />
+        <Route path="/AdminDashboard" element={<ProtectedRoute role="ADMIN"><AdminDashboard /></ProtectedRoute>} />
         <Route path="*" element={<h1>Not Found</h1>} />
-        <Route path="/dados" element={<RealTimeStats/>} />
+        <Route path="/dados" element={<RealTimeStats />} />
         <Route path="/meus-formularios" element={<MeusFormularios />} />
       </Routes>
     </Router>

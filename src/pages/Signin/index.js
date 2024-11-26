@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'; // Importa o decodificador JWT
-import api from '../../services/api'; // Importe a configuração da API
+import { jwtDecode } from 'jwt-decode'; 
+import api from '../../services/api';
 import './styles.css';
 
 function Login() {
@@ -41,7 +41,7 @@ function Login() {
 
     try {
       console.log('Enviando requisição para /auth/login com:', { email, senha });
-      const response = await api.post('/auth/login', { email, senha },{ headers: { 'Content-Type': 'application/json' } });
+      const response = await api.post('/auth/login', { email, senha }, { headers: { 'Content-Type': 'application/json' } });
       console.log('Resposta da API:', response);
 
       if (response.status === 200) {
