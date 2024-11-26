@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api'; 
 import RealTimeStats from '../../pages/RealTimesStats';
@@ -10,6 +10,9 @@ const Form = () => {
   const [setor, setSector] = useState('');
   const [problema, setProblem] = useState('');
   const [showModal, setShowModal] = useState(false); 
+  const [formularios, setFormularios] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,6 +26,7 @@ const Form = () => {
 
       if (response.status === 200 || response.status === 201) {
         setShowModal(true); 
+        fetchFormularios(); // Atualiza a lista de formulários após a criação
       } else {
         setShowModal(true); 
       }
@@ -43,6 +47,25 @@ const Form = () => {
   const navigateToMeusFormularios = () => {
     navigate('/meus-formularios');
   };
+
+  const fetchFormularios = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await api.get('/form/me');
+      setFormularios(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar os formulários:', error);
+      setError('Não foi possível carregar os formulários. Tente novamente mais tarde.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFormularios();
+  }, []);
 
   return (
     <div className="form-container">
@@ -101,9 +124,30 @@ const Form = () => {
       <div className="real-time-stats-container">
         <RealTimeStats />
       </div>
+
+      <h2>Meus Formulários Criados</h2>
+      {loading ? (
+        <p>Carregando formulários...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        <ul>
+          {formularios.length > 0 ? (
+            formularios.map((form) => (
+              <li key={form.id}>
+                <h4>Motivo: {form.motivo}</h4>
+                <p>Setor: {form.setor}</p>
+                <p>Problema: {form.problema}</p>
+                <p>Status: {form.status}</p>
+                <p>Data de Criação: {new Date(form.dataCriacao).toLocaleString()}</p>
+              </li>
+            ))
+          ) : (
+            <p>Você ainda não criou nenhum formulário.</p>
+          )}
+        </ul>
+      )}
     </div>
-      
-    
   );
 };
 

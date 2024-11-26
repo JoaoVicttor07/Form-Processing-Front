@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
-import RealTimeStats from '../../pages/RealTimesStats';
 import './styles.css';
 
 const AdminDashboard = () => {
@@ -23,7 +22,12 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await api.get('/form/list');
+        const token = localStorage.getItem('authToken');
+        const response = await api.get('/form/list', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         setTickets(response.data);
       } catch (error) {
         console.error('Erro ao buscar tickets:', error);
@@ -46,9 +50,8 @@ const AdminDashboard = () => {
   const handleStatusChange = async (id, status) => {
     try {
       const token = localStorage.getItem('authToken');
-      console.log(`Alterando status do ticket ${id} para ${status}`);
       const ticket = tickets.find(ticket => ticket.id === id);
-      const response = await api.patch(`/form/update/${id}`, {
+      await api.patch(`/form/update/${id}`, {
         ...ticket,
         status
       }, {
@@ -56,7 +59,6 @@ const AdminDashboard = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      console.log('Resposta da API:', response);
       setTickets(tickets.map(ticket => (ticket.id === id ? { ...ticket, status } : ticket)));
       setSelectedTicket(null);
     } catch (error) {
@@ -68,7 +70,7 @@ const AdminDashboard = () => {
   };
 
   const handleRejectTicket = async (id) => {
-    await handleStatusChange(id, 'REJEITADO');
+    await handleStatusChange(id, 'RESOLVIDO');
   };
 
   const filteredTickets = tickets.filter(ticket => {
@@ -83,11 +85,8 @@ const AdminDashboard = () => {
   const parseDate = (dateString) => {
     if (!dateString) return 'Data inválida';
     try {
-      console.log('Original dateString:', dateString);
       const formattedDate = dateString.replace(' ', 'T');
-      console.log('Formatted dateString:', formattedDate);
       const date = new Date(formattedDate);
-      console.log('Parsed date:', date);
       return date.toLocaleString(); // Exibe data no formato local
     } catch (error) {
       console.error('Erro ao formatar a data:', error);
@@ -105,9 +104,9 @@ const AdminDashboard = () => {
               Status:
               <select name="status" value={filters.status} onChange={handleFilterChange}>
                 <option value="">Todos</option>
-                <option value="APROVADO">APROVADO</option>
                 <option value="PENDENTE">PENDENTE</option>
-                <option value="REJEITADO">REJEITADO</option>
+                <option value="ANDAMENTO">ANDAMENTO</option>
+                <option value="RESOLVIDO">RESOLVIDO</option>
               </select>
             </label>
             <label>
@@ -144,13 +143,10 @@ const AdminDashboard = () => {
             <p>Status: {selectedTicket.status}</p>
             <p>Data de Criação: {parseDate(selectedTicket.dataCriacao)}</p>
             <button className="close" onClick={() => setSelectedTicket(null)}>Fechar</button>
-            <button className="resolve" onClick={() => handleStatusChange(selectedTicket.id, 'APROVADO')}>Marcar como Aprovado</button>
+            <button className="resolve" onClick={() => handleStatusChange(selectedTicket.id, 'ANDAMENTO')}>Marcar como EM ANDAMENTO</button>
             <button className="delete" onClick={() => handleRejectTicket(selectedTicket.id)}>Rejeitar</button>
           </div>
         )}
-      </div>
-      <div className="real-time-stats-container">
-        <RealTimeStats />
       </div>
     </div>
   );
