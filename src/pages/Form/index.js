@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../services/api'; 
 import RealTimeStats from '../../pages/RealTimesStats';
 import './styles.css'; 
+import { jwtDecode } from 'jwt-decode';
 
 const Form = () => {
   const navigate = useNavigate();
@@ -13,6 +14,16 @@ const Form = () => {
   const [formularios, setFormularios] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const nome = decodedToken.nome;
+      setUserName(nome);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,6 +80,11 @@ const Form = () => {
 
   return (
     <div className="form-container">
+      {userName ? (
+        <p>Bem-vindo, {userName}!</p>
+      ) : (
+        <p>Bem-vindo, usuário!</p>
+      )}
       <button className="logout-button" onClick={handleLogout}>Logout</button>
       <h2>Formulário de Chamado</h2>
       <form onSubmit={handleSubmit}>
