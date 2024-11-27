@@ -53,7 +53,7 @@ const UpdateProfile = () => {
     setError('');
 
     try {
-      await api.put('/user/profile', { nome: sanitizeInput(nome), email: sanitizeInput(email), senha: sanitizeInput(senha) }, {
+      await api.put('/user/update', { nome: sanitizeInput(nome), email: sanitizeInput(email), senha: sanitizeInput(senha) }, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -71,7 +71,7 @@ const UpdateProfile = () => {
     setError('');
 
     try {
-      await api.delete('/user/profile', {
+      await api.delete('/user/delete', {
         headers: {
           Authorization: `Bearer ${token}`
         }
