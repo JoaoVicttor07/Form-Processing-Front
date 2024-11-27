@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import api from '../../services/api'; 
-import RealTimeStats from '../../pages/RealTimesStats'; 
 import './styles.css';
 
-function Login() {
+const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -88,55 +87,53 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <h3>Inicie sessão na Your Ticket</h3>
-      {generalError && <div className="error-message" aria-live="polite">{generalError}</div>}
-      <div>
-        <label htmlFor="email">
-          Email:<span className="error-asterisk">{fieldErrors.email && '*'}</span>
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={fieldErrors.email ? 'input-error' : ''}
-          aria-invalid={fieldErrors.email}
-        />
-      </div>
-      <div>
-        <label htmlFor="senha">
-          Senha:<span className="error-asterisk">{fieldErrors.senha && '*'}</span>
-        </label>
-        <input
-          id="senha"
-          type="password"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-          className={fieldErrors.senha ? 'input-error' : ''}
-          aria-invalid={fieldErrors.senha}
-        />
-      </div>
-      <button onClick={handleLogin} disabled={loading} className="button-loading">
-        {loading ? (
-          <>
-            Carregando...
-            <div className="spinner"></div>
-          </>
-        ) : (
-          'Login'
-        )}
-      </button>
-      <div className="signup-link">
-        <p>Não tem uma conta? <Link to="/signup">Cadastre-se</Link></p>
-      </div>
-
-      {}
-      <div className="real-time-stats-container">
-        <RealTimeStats />
+    <div className="login-page">
+      <img src="/logoyour.png" alt="Logo" className="logo" />
+      <div className="login-container">
+        <h3>Inicie sessão na Your Ticket</h3>
+        {generalError && <div className="error-message" aria-live="polite">{generalError}</div>}
+        <div>
+          <label htmlFor="email">
+            Email:<span className="error-asterisk">{fieldErrors.email && '*'}</span>
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={fieldErrors.email ? 'input-error' : ''}
+            aria-invalid={fieldErrors.email}
+          />
+        </div>
+        <div>
+          <label htmlFor="senha">
+            Senha:<span className="error-asterisk">{fieldErrors.senha && '*'}</span>
+          </label>
+          <input
+            id="senha"
+            type="password"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            className={fieldErrors.senha ? 'input-error' : ''}
+            aria-invalid={fieldErrors.senha}
+          />
+        </div>
+        <button onClick={handleLogin} disabled={loading} className="button-loading">
+          {loading ? (
+            <>
+              Carregando...
+              <div className="spinner"></div>
+            </>
+          ) : (
+            'Login'
+          )}
+        </button>
+        <div className="signup-link">
+          <p>Não tem uma conta? <Link to="/signup">Cadastre-se</Link></p>
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default Login;

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api'; // Importe a configuração da API
+import './styles.css'; // Importe o arquivo de estilos
 
 const UpdateProfile = () => {
   const [nome, setNome] = useState('');
@@ -15,138 +16,121 @@ const UpdateProfile = () => {
   const token = localStorage.getItem('authToken'); // Assume que o token JWT está armazenado no localStorage
 
   // Função para carregar os dados do usuário
-  const fetchUserData = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/profile', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  const fetchUserData = useCallback(async () => {
+    setLoading(true);
+    setError('');
 
-      const { nome, email } = response.data;
-      setNome(nome);
-      setEmail(email);
-      setLoading(false); // Dados carregados
-    } catch (err) {
+    try {
+      console.log('Fetching user data with token:', token);
+      const response = await api.get('/user/profile', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const userData = response.data;
+      setNome(userData.nome);
+      setEmail(userData.email);
+      console.log('User data fetched successfully:', userData);
+    } catch (error) {
+      console.error('Erro ao carregar os dados do usuário:', error);
       setError('Erro ao carregar os dados do usuário.');
+    } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
-  // Função para excluir o perfil
-  const deleteProfile = async () => {
-    if (window.confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível.')) {
-      setIsDeleting(true); // Define o estado de exclusão para true
-
-      try {
-        await axios.delete('http://localhost:8080/user/delete', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        
-        // Após a exclusão, removemos o token e redirecionamos para a tela de login
-        localStorage.removeItem('authToken');
-        navigate('/signin');
-      } catch (err) {
-        setError('Erro ao excluir o perfil. Tente novamente mais tarde.');
-        setIsDeleting(false); // Resetar o estado de exclusão
-      }
-    }
-  };
-
-  // Carregar os dados do usuário assim que o componente for montado
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [fetchUserData]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const data = {
-      nome,
-      email,
-      senha,
-    };
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setMessage('');
+    setError('');
 
     try {
-      const response = await axios.put(
-        'http://localhost:8080/user/update', // Substitua pelo seu endpoint
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      await api.put('/user/profile', { nome, email, senha }, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      );
-
-      setMessage('Dados atualizados com sucesso!');
-      setError('');
-    } catch (err) {
-      setMessage('');
-      setError('Erro ao atualizar os dados. Verifique os dados fornecidos ou tente novamente mais tarde.');
+      });
+      setMessage('Perfil atualizado com sucesso.');
+    } catch (error) {
+      console.error('Erro ao atualizar o perfil:', error);
+      setError('Erro ao atualizar o perfil.');
     }
   };
 
-  if (loading) {
-    return <p>Carregando...</p>;
-  }
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    setMessage('');
+    setError('');
+
+    try {
+      await api.delete('/user/profile', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      localStorage.removeItem('authToken');
+      navigate('/signin');
+    } catch (error) {
+      console.error('Erro ao excluir o perfil:', error);
+      setError('Erro ao excluir o perfil.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleBack = () => {
+    navigate(-1); // Navega para a página anterior
+  };
 
   return (
-    <div>
+    <div className="profile-container">
       <h2>Atualizar Perfil</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="nome">Nome:</label>
-          <input
-            type="text"
-            id="nome"
-            name="nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="email">E-mail:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="senha">Senha:</label>
-          <input
-            type="password"
-            id="senha"
-            name="senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <button type="submit">Atualizar</button>
-        </div>
-      </form>
-
-      {message && <p style={{ color: 'green' }}>{message}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      {/* Botão de exclusão */}
-      <button
-        onClick={deleteProfile}
-        disabled={isDeleting} // Desabilita o botão enquanto a exclusão está em andamento
-        style={{ backgroundColor: 'red', color: 'white', padding: '10px', border: 'none', marginTop: '20px' }}
-      >
-        {isDeleting ? 'Excluindo...' : 'Excluir Conta'}
+      {loading ? (
+        <p>Carregando...</p>
+      ) : (
+        <form onSubmit={handleUpdate} className="profile-form">
+          <div className="form-group">
+            <label htmlFor="nome">Nome:</label>
+            <input
+              id="nome"
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="senha">Senha:</label>
+            <input
+              id="senha"
+              type="password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+            />
+          </div>
+          {message && <p className="success-message">{message}</p>}
+          {error && <p className="error-message">{error}</p>}
+          <button type="submit" className="btn btn-primary">Atualizar</button>
+        </form>
+      )}
+      <button onClick={handleDelete} disabled={isDeleting} className="btn btn-danger">
+        {isDeleting ? 'Excluindo...' : 'Excluir Perfil'}
       </button>
+      <button onClick={handleBack} className="btn btn-secondary">Voltar</button>
     </div>
   );
 };

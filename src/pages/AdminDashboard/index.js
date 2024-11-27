@@ -10,6 +10,7 @@ const AdminDashboard = () => {
   const [filters, setFilters] = useState({ status: '', setor: '', date: '' });
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [message, setMessage] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   useEffect(() => {
     // Adiciona a classe 'admin-background' ao body quando o componente é montado
@@ -49,14 +50,17 @@ const AdminDashboard = () => {
     setFilters({ ...filters, [name]: value });
   };
 
-  const handleStatusChange = async (id, status, message = '') => {
+  const handleStatusChange = async (id, status) => {
     try {
       const token = localStorage.getItem('authToken');
       const ticket = tickets.find(ticket => ticket.id === id);
+      if (!ticket) {
+        console.error('Ticket não encontrado com id:', id);
+        return;
+      }
       await api.patch(`/form/update/${id}`, {
         ...ticket,
-        status,
-        mensagem: message
+        status
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -64,8 +68,41 @@ const AdminDashboard = () => {
       });
       setTickets(tickets.map(ticket => (ticket.id === id ? { ...ticket, status } : ticket)));
       setSelectedTicket(null);
+    } catch (error) {
+      console.error('Erro ao alterar status do ticket:', error);
+      if (error.response) {
+        console.error('Detalhes do erro:', error.response.data);
+      }
+    }
+  };
+
+  const handleResolveTicket = async (id, message) => {
+    if (message.length < 10) {
+      alert('A mensagem deve ter no mínimo 10 caracteres.');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('authToken');
+      const ticket = tickets.find(ticket => ticket.id === id);
+      if (!ticket) {
+        console.error('Ticket não encontrado com id:', id);
+        return;
+      }
+      await api.patch(`/form/update/${id}`, {
+        ...ticket,
+        status: 'RESOLVIDO',
+        mensagem: message
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setTickets(tickets.map(ticket => (ticket.id === id ? { ...ticket, status: 'RESOLVIDO' } : ticket)));
+      setSelectedTicket(null);
       setShowMessageModal(false);
       setMessage('');
+      setShowSuccessMessage(true);
     } catch (error) {
       console.error('Erro ao alterar status do ticket:', error);
       if (error.response) {
@@ -161,12 +198,20 @@ const AdminDashboard = () => {
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Digite a mensagem para o usuário"
+              placeholder="Digite a mensagem para o usuário (mínimo 10 caracteres)"
               rows="4"
               cols="50"
             />
             <button onClick={() => setShowMessageModal(false)}>Fechar</button>
-            <button onClick={() => handleStatusChange(selectedTicket, 'RESOLVIDO', message)}>Confirmar mensagem e enviar</button>
+            <button onClick={() => handleResolveTicket(selectedTicket, message)}>Confirmar mensagem e enviar</button>
+          </div>
+        </div>
+      )}
+      {showSuccessMessage && (
+        <div className="success-message-overlay">
+          <div className="success-message-content">
+            <h3>Mensagem enviada com sucesso!</h3>
+            <button onClick={() => setShowSuccessMessage(false)}>Voltar</button>
           </div>
         </div>
       )}

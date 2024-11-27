@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../../services/api';
 import ReCAPTCHA from 'react-google-recaptcha';
+import api from '../../services/api';
 import './styles.css';
 
 function Signup() {
@@ -103,81 +103,84 @@ function Signup() {
   };
 
   return (
-    <div className="signup-container">
-      <h2>Cadastro de Usuário</h2>
-      {priorityError && <div className="error-message">{priorityError}</div>}
-      <form onSubmit={handleSignup}>
-        <div>
-          <label htmlFor="nome">Nome:</label>
-          {fieldErrors.nome && <span className="error-asterisk">*</span>}
-          <input
-            id="nome"
-            type="text"
-            value={nome}
-            onChange={(e) => setNome(sanitizeInput(e.target.value))}
-            className={fieldErrors.nome ? 'input-error' : ''}
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email:</label>
-          {fieldErrors.email && <span className="error-asterisk">*</span>}
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={fieldErrors.email ? 'input-error' : ''}
-          />
-        </div>
-        <div>
-          <label htmlFor="senha">Senha:</label>
-          {fieldErrors.senha && <span className="error-asterisk">*</span>}
-          <input
-            id="senha"
-            type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            className={fieldErrors.senha ? 'input-error' : ''}
-          />
-        </div>
-        <div>
-          <label htmlFor="confirmSenha">Confirme sua senha:</label>
-          {fieldErrors.confirmSenha && <span className="error-asterisk">*</span>}
-          <input
-            id="confirmSenha"
-            type="password"
-            value={confirmSenha}
-            onChange={(e) => setConfirmSenha(e.target.value)}
-            className={fieldErrors.confirmSenha ? 'input-error' : ''}
-          />
-        </div>
-        <ReCAPTCHA
-          sitekey="6LcBHYsqAAAAAIz6nDnaCMMlKOtEAsg5rsc80jkM"
-          onChange={handleCaptchaChange}
-        />
-        <button type="submit" disabled={!captchaValidated || loading} className="button-loading">
-          {loading ? (
-            <>
-              Carregando...
-              <div className="spinner"></div>
-            </>
-          ) : (
-            'Cadastrar'
-          )}
-        </button>
-      </form>
-      <div className="login-link">
-        <p>Já tem uma conta? <Link to="/">Faça login</Link></p>
-      </div>
-
-      {success && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>Cadastro realizado com sucesso!</h3>
-            <button onClick={() => navigate('/')}>Faça login</button>
+    <div className="signup-page">
+      <img src="/logoyour.png" alt="Logo" className="logo" />
+      <div className="signup-container">
+        <h2>Cadastro de Usuário</h2>
+        {priorityError && <div className="error-message">{priorityError}</div>}
+        <form onSubmit={handleSignup}>
+          <div>
+            <label htmlFor="nome">Nome:</label>
+            {fieldErrors.nome && <span className="error-asterisk">*</span>}
+            <input
+              id="nome"
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(sanitizeInput(e.target.value))}
+              className={fieldErrors.nome ? 'input-error' : ''}
+            />
           </div>
+          <div>
+            <label htmlFor="email">Email:</label>
+            {fieldErrors.email && <span className="error-asterisk">*</span>}
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className={fieldErrors.email ? 'input-error' : ''}
+            />
+          </div>
+          <div>
+            <label htmlFor="senha">Senha:</label>
+            {fieldErrors.senha && <span className="error-asterisk">*</span>}
+            <input
+              id="senha"
+              type="password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              className={fieldErrors.senha ? 'input-error' : ''}
+            />
+          </div>
+          <div>
+            <label htmlFor="confirmSenha">Confirme sua senha:</label>
+            {fieldErrors.confirmSenha && <span className="error-asterisk">*</span>}
+            <input
+              id="confirmSenha"
+              type="password"
+              value={confirmSenha}
+              onChange={(e) => setConfirmSenha(e.target.value)}
+              className={fieldErrors.confirmSenha ? 'input-error' : ''}
+            />
+          </div>
+          <ReCAPTCHA
+            sitekey="6LcBHYsqAAAAAIz6nDnaCMMlKOtEAsg5rsc80jkM"
+            onChange={handleCaptchaChange}
+          />
+          <button type="submit" disabled={!captchaValidated || loading} className="button-loading">
+            {loading ? (
+              <>
+                Carregando...
+                <div className="spinner"></div>
+              </>
+            ) : (
+              'Cadastrar'
+            )}
+          </button>
+        </form>
+        <div className="login-link">
+          <p>Já tem uma conta? <Link to="/">Faça login</Link></p>
         </div>
-      )}
+
+        {success && (
+          <div className="modal">
+            <div className="modal-content">
+              <h3>Cadastro realizado com sucesso!</h3>
+              <button onClick={() => navigate('/')}>Faça login</button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
