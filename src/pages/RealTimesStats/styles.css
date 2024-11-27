@@ -1,0 +1,16 @@
+.real-time-stats-container {
+    position: fixed;
+    bottom: 10px; 
+    right: 10px; 
+    z-index: 1000; 
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px;
+    border-radius: 8px;
+    font-size: 12px;
+    opacity: 0.8;
+  }
+  
+  .real-time-stats-container > div {
+    max-width: 200px;
+  }

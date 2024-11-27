@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import RealTimeStats from '../RealTimesStats/index';
 import './styles.css';
 
 const AdminDashboard = () => {
@@ -147,6 +148,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
+      <RealTimeStats /> { }
       <button className="logout-button" onClick={handleLogout}>Logout</button>
       <div className="content">
         <div className="main-content">

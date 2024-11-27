@@ -8,7 +8,7 @@ import { jwtDecode } from 'jwt-decode';
 const Form = () => {
   const navigate = useNavigate();
   const [motivo, setCallReason] = useState('');
-  const [setor, setSector] = useState(''); // Valor padrão vazio
+  const [setor, setSector] = useState('');
   const [problema, setProblem] = useState('');
   const [showModal, setShowModal] = useState(false); 
   const [formularios, setFormularios] = useState([]);
@@ -16,7 +16,7 @@ const Form = () => {
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState('');
   const [showFormularios, setShowFormularios] = useState(false);
-  const [formError, setFormError] = useState(''); // Estado para mensagem de erro do formulário
+  const [formError, setFormError] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
@@ -44,8 +44,8 @@ const Form = () => {
 
       if (response.status === 200 || response.status === 201) {
         setShowModal(true); 
-        fetchFormularios(); // Atualiza a lista de formulários após a criação
-        setFormError(''); // Limpa a mensagem de erro do formulário
+        fetchFormularios();
+        setFormError('');
       } else {
         setShowModal(true); 
       }
@@ -84,106 +84,105 @@ const Form = () => {
   };
 
   const goToUpdateProfile = () => {
-    navigate('/perfil'); // O caminho deve ser o mesmo definido no seu router
+    navigate('/perfil');
   };
 
   return (
-    <div className="form-container">
-      {userName ? (
-        <p>Bem-vindo, {userName}!</p>
-      ) : (
-        <p>Bem-vindo, usuário!</p>
-      )}
-      <button className="logout-button" onClick={handleLogout}>Logout</button>
-      <button className="update-profile-button" onClick={goToUpdateProfile}>Atualizar Perfil</button>
-      <h2>Formulário de Chamado</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="motivo">Motivo:</label>
-          <input
-            id="motivo"
-            type="text"
-            value={motivo}
-            onChange={(e) => setCallReason(e.target.value)}
-            placeholder="Descreva o motivo"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="setor">Setor:</label>
-          <select
-            id="setor"
-            value={setor}
-            onChange={(e) => setSector(e.target.value)}
-            required
-          >
-            <option value="">Selecione o setor</option>
-            <option value="Técnico">Técnico</option>
-            <option value="Financeiro">Financeiro</option>
-            <option value="Logística">Logística</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="problema">Problema:</label>
-          <input
-            id="problema"
-            type="text"
-            value={problema}
-            onChange={(e) => setProblem(e.target.value)}
-            placeholder="Descreva o problema"
-            required
-          />
-        </div>
-        {formError && <p style={{ color: 'red' }}>{formError}</p>}
-        <button type="submit">Enviar</button>
-      </form>
-
-      {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>Formulário cadastrado com sucesso!</h3>
-            <button onClick={closeModal}>Ok</button>
+    <div className="form-page">
+      <RealTimeStats />
+      <div className="form-container">
+        {userName ? (
+          <p>Bem-vindo, {userName}!</p>
+        ) : (
+          <p>Bem-vindo, usuário!</p>
+        )}
+        <button id="form-logout-button" onClick={handleLogout}>Logout</button>
+        <button id="update-profile-button" onClick={goToUpdateProfile}>Atualizar Perfil</button>
+        <h2>Formulário de Chamado</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="motivo">Motivo:</label>
+            <input
+              id="motivo"
+              type="text"
+              value={motivo}
+              onChange={(e) => setCallReason(e.target.value)}
+              placeholder="Descreva o motivo"
+              required
+            />
           </div>
-        </div>
-      )}
+          <div>
+            <label htmlFor="setor">Setor:</label>
+            <select
+              id="setor"
+              value={setor}
+              onChange={(e) => setSector(e.target.value)}
+              required
+            >
+              <option value="">Selecione o setor</option>
+              <option value="Técnico">Técnico</option>
+              <option value="Financeiro">Financeiro</option>
+              <option value="Logística">Logística</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="problema">Problema:</label>
+            <input
+              id="problema"
+              type="text"
+              value={problema}
+              onChange={(e) => setProblem(e.target.value)}
+              placeholder="Descreva o problema"
+              required
+            />
+          </div>
+          {formError && <p style={{ color: 'red' }}>{formError}</p>}
+          <button type="submit">Enviar</button>
+        </form>
 
-      <button onClick={fetchFormularios} className="meus-formularios-button">
-        Meus Formulários
-      </button>
+        {showModal && (
+          <div className="modal">
+            <div className="modal-content">
+              <h3>Formulário cadastrado com sucesso!</h3>
+              <button onClick={closeModal}>Ok</button>
+            </div>
+          </div>
+        )}
 
-      <div className="real-time-stats-container">
-        <RealTimeStats />
+        <button onClick={fetchFormularios} className="meus-formularios-button">
+          Meus Formulários
+        </button>
+
+        {showFormularios && (
+          <>
+            <h2>Meus Formulários Criados</h2>
+            <button onClick={closeFormularios} className="close-formularios-button">
+              Fechar Formulários
+            </button>
+            {loading ? (
+              <p>Carregando formulários...</p>
+            ) : error ? (
+              <p>{error}</p>
+            ) : (
+              <ul>
+                {formularios.length > 0 ? (
+                  formularios.map((form) => (
+                    <li key={form.id}>
+                      <h4>Motivo: {form.motivo}</h4>
+                      <p>Setor: {form.setor}</p>
+                      <p>Problema: {form.problema}</p>
+                      <p>Status: {form.status}</p>
+                      <p>Data de Criação: {new Date(form.dataCriacao).toLocaleString()}</p>
+                    </li>
+                  ))
+                ) : (
+                  <p>Você ainda não criou nenhum formulário.</p>
+                )}
+              </ul>
+            )}
+          </>
+        )}
       </div>
-
-      {showFormularios && (
-        <>
-          <h2>Meus Formulários Criados</h2>
-          <button onClick={closeFormularios} className="close-formularios-button">
-            Fechar Formulários
-          </button>
-          {loading ? (
-            <p>Carregando formulários...</p>
-          ) : error ? (
-            <p>{error}</p>
-          ) : (
-            <ul>
-              {formularios.length > 0 ? (
-                formularios.map((form) => (
-                  <li key={form.id}>
-                    <h4>Motivo: {form.motivo}</h4>
-                    <p>Setor: {form.setor}</p>
-                    <p>Problema: {form.problema}</p>
-                    <p>Status: {form.status}</p>
-                    <p>Data de Criação: {new Date(form.dataCriacao).toLocaleString()}</p>
-                  </li>
-                ))
-              ) : (
-                <p>Você ainda não criou nenhum formulário.</p>
-              )}
-            </ul>
-          )}
-        </>
-      )}
     </div>
   );
 };

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import api from '../../services/api'; 
+import api from '../../services/api';
+import RealTimeStats from '../RealTimesStats/index';
 import './styles.css';
 
 const Login = () => {
@@ -88,6 +89,7 @@ const Login = () => {
 
   return (
     <div className="login-page">
+      <RealTimeStats /> { }
       <img src="/logoyour.png" alt="Logo" className="logo" />
       <div className="login-container">
         <h3>Inicie sessão na Your Ticket</h3>

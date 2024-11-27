@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
+import './styles.css';
 
 const RealTimeStats = () => {
   const [data, setData] = useState({ totalUsers: 0, totalForms: 0, pendingForms: 0 });
@@ -28,7 +29,7 @@ const RealTimeStats = () => {
   }, []);
 
   return (
-    <div className="real-time-stats">
+    <div className="real-time-stats-container">
       <h1>Estatísticas em tempo real</h1>
       {loading ? (
         <p>Loading...</p>
