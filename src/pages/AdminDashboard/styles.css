@@ -222,10 +222,34 @@ color: rgba(0, 0, 0, 0.7);
 }
 
 .modal-content {
-  background-color: white;
+  background-color: rgba(0, 0, 0, 0.7);
   padding: 20px;
   border-radius: 8px;
   text-align: center;
+  color: #ffffff;
+}
+
+.modal-content textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  background: transparent;
+  color: #ffffff;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.modal-content textarea:focus {
+  border-color: #00d0ff;
+  box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+  outline: none;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
 
 .success-message-overlay {
@@ -241,10 +265,11 @@ color: rgba(0, 0, 0, 0.7);
 }
 
 .success-message-content {
-  background-color: white;
+  background-color: rgba(0, 0, 0, 0.7);
   padding: 20px;
   border-radius: 8px;
   text-align: center;
+  color: #ffffff;
 }
 
 .modal-content button, .success-message-content button {

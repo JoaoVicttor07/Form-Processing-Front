@@ -11,6 +11,8 @@ const AdminDashboard = () => {
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [message, setMessage] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showInProgressMessage, setShowInProgressMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     // Adiciona a classe 'admin-background' ao body quando o componente é montado
@@ -68,6 +70,9 @@ const AdminDashboard = () => {
       });
       setTickets(tickets.map(ticket => (ticket.id === id ? { ...ticket, status } : ticket)));
       setSelectedTicket(null);
+      if (status === 'ANDAMENTO') {
+        setShowInProgressMessage(true);
+      }
     } catch (error) {
       console.error('Erro ao alterar status do ticket:', error);
       if (error.response) {
@@ -78,7 +83,7 @@ const AdminDashboard = () => {
 
   const handleResolveTicket = async (id, message) => {
     if (message.length < 10) {
-      alert('A mensagem deve ter no mínimo 10 caracteres.');
+      setErrorMessage('A mensagem deve ter no mínimo 10 caracteres.');
       return;
     }
 
@@ -102,6 +107,7 @@ const AdminDashboard = () => {
       setSelectedTicket(null);
       setShowMessageModal(false);
       setMessage('');
+      setErrorMessage('');
       setShowSuccessMessage(true);
     } catch (error) {
       console.error('Erro ao alterar status do ticket:', error);
@@ -112,7 +118,9 @@ const AdminDashboard = () => {
   };
 
   const handleRejectTicket = (id) => {
-    setSelectedTicket(id);
+    setSelectedTicket(tickets.find(ticket => ticket.id === id));
+    setMessage(''); // Limpa a mensagem ao abrir a modal
+    setErrorMessage(''); // Limpa a mensagem de erro ao abrir a modal
     setShowMessageModal(true);
   };
 
@@ -202,8 +210,9 @@ const AdminDashboard = () => {
               rows="4"
               cols="50"
             />
-            <button onClick={() => setShowMessageModal(false)}>Fechar</button>
-            <button onClick={() => handleResolveTicket(selectedTicket, message)}>Confirmar mensagem e enviar</button>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            <button onClick={() => { setShowMessageModal(false); setMessage(''); setErrorMessage(''); }}>Fechar</button>
+            <button onClick={() => handleResolveTicket(selectedTicket.id, message)}>Confirmar mensagem e enviar</button>
           </div>
         </div>
       )}
@@ -212,6 +221,14 @@ const AdminDashboard = () => {
           <div className="success-message-content">
             <h3>Mensagem enviada com sucesso!</h3>
             <button onClick={() => setShowSuccessMessage(false)}>Voltar</button>
+          </div>
+        </div>
+      )}
+      {showInProgressMessage && (
+        <div className="success-message-overlay">
+          <div className="success-message-content">
+            <h3>Status do ticket alterado para Em andamento com sucesso!</h3>
+            <button onClick={() => setShowInProgressMessage(false)}>Fechar</button>
           </div>
         </div>
       )}
