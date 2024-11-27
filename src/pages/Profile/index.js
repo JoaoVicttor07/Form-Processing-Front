@@ -43,13 +43,17 @@ const UpdateProfile = () => {
     fetchUserData();
   }, [fetchUserData]);
 
+  const sanitizeInput = (input) => {
+    return input.replace(/[^a-zA-Z0-9Çç~´@.áéíóúâêîôûãõäëïöüÁÉÍÓÚÂÊÎÔÛÃÕÄËÏÖÜ ]/g, '');
+  };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     setMessage('');
     setError('');
 
     try {
-      await api.put('/user/profile', { nome, email, senha }, {
+      await api.put('/user/profile', { nome: sanitizeInput(nome), email: sanitizeInput(email), senha: sanitizeInput(senha) }, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -99,7 +103,7 @@ const UpdateProfile = () => {
               id="nome"
               type="text"
               value={nome}
-              onChange={(e) => setNome(e.target.value)}
+              onChange={(e) => setNome(sanitizeInput(e.target.value))}
               required
             />
           </div>
@@ -109,7 +113,7 @@ const UpdateProfile = () => {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(sanitizeInput(e.target.value))}
               required
             />
           </div>
@@ -119,7 +123,7 @@ const UpdateProfile = () => {
               id="senha"
               type="password"
               value={senha}
-              onChange={(e) => setSenha(e.target.value)}
+              onChange={(e) => setSenha(sanitizeInput(e.target.value))}
             />
           </div>
           {message && <p className="success-message">{message}</p>}
