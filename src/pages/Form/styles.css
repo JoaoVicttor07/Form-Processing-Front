@@ -5,8 +5,17 @@
   background-repeat: no-repeat;
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.welcome-message {
+  position: absolute;
+  top: 20px;
+  color: white;
+  font-size: 35px;
+  font-weight: bold;
 }
 
 #form-logout-button {
