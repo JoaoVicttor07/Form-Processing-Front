@@ -90,12 +90,8 @@ const Form = () => {
   return (
     <div className="form-page">
       <RealTimeStats />
+      {userName && <p className="welcome-message">Bem-vindo, {userName}!</p>}
       <div className="form-container">
-        {userName ? (
-          <p>Bem-vindo, {userName}!</p>
-        ) : (
-          <p>Bem-vindo, usuário!</p>
-        )}
         <button id="form-logout-button" onClick={handleLogout}>Logout</button>
         <button id="update-profile-button" onClick={goToUpdateProfile}>Atualizar Perfil</button>
         <h2>Formulário de Chamado</h2>
