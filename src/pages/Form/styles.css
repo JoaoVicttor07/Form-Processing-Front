@@ -165,7 +165,7 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.modal {
+#modal-form {
   position: fixed;
   top: 0;
   left: 0;
@@ -177,12 +177,26 @@
   justify-content: center;
 }
 
-.modal-content {
-  background-color: rgba(0, 0, 0, 0.7);
+#modal-form-content {
+  background-color: #ffffff;
   padding: 20px;
   border-radius: 8px;
   text-align: center;
-  color: #ffffff;
+  color: black;
+}
+
+#modal-form-content button {
+  background-color: #007bff; /* Cor azul */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#modal-form-content button:hover {
+  background-color: #00d0ff;
 }
 
 .error-message {
