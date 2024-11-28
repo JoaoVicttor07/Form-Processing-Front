@@ -18,8 +18,8 @@
 <h2 id="layout">🎨 Layout</h2>
 
 <p align="center">
-    <img src="../.github/example.png" alt="Image Example" width="400px">
-    <img src="../.github/example.png" alt="Image Example" width="400px">
+    <img src="./public/imgForm.png" alt="Image Form" width="400px">
+    <img src="./public/imgAdm.png" alt="Image Example" width="400px">
 </p>
 
 <h2 id="descricao">📄 Descrição</h2>
