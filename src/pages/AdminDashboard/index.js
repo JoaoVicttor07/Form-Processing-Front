@@ -16,10 +16,7 @@ const AdminDashboard = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    // Adiciona a classe 'admin-background' ao body quando o componente é montado
     document.body.classList.add('admin-background');
-
-    // Remove a classe 'admin-background' do body quando o componente é desmontado
     return () => {
       document.body.classList.remove('admin-background');
     };
@@ -120,8 +117,8 @@ const AdminDashboard = () => {
 
   const handleRejectTicket = (id) => {
     setSelectedTicket(tickets.find(ticket => ticket.id === id));
-    setMessage(''); // Limpa a mensagem ao abrir a modal
-    setErrorMessage(''); // Limpa a mensagem de erro ao abrir a modal
+    setMessage('');
+    setErrorMessage('');
     setShowMessageModal(true);
   };
 
@@ -139,7 +136,7 @@ const AdminDashboard = () => {
     try {
       const formattedDate = dateString.replace(' ', 'T');
       const date = new Date(formattedDate);
-      return date.toLocaleString(); // Exibe data no formato local
+      return date.toLocaleString();
     } catch (error) {
       console.error('Erro ao formatar a data:', error);
       return 'Data inválida';

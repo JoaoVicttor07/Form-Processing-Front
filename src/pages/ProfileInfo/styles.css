@@ -1,0 +1,101 @@
+.profile-page {
+    background-image: url('../../../public/-24.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #profile-logout-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: 1px solid #ffffff;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  
+  #profile-logout-button:hover {
+    background-color: #00d0ff;
+    box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+  }
+  
+  .profile-container {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    border: 0.1px solid #ffffff9e;
+    width: 100%;
+    max-width: 800px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+  }
+  
+  .profile-container h2 {
+    color: #00d0ff;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .profile-container p {
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+  
+  .success-message {
+    color: green;
+    margin-top: 10px;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px 5px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: rgb(0, 0, 0);
+    background-color: #ffffff;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .btn:hover {
+    background-color: #00d0ff;
+    box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }

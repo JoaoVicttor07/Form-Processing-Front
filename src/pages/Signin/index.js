@@ -40,21 +40,15 @@ const Login = () => {
     setLoading(true);
 
     try {
-      console.log('Enviando requisição para /auth/login com:', { email, senha });
       const response = await api.post('/auth/login', { email, senha }, { headers: { 'Content-Type': 'application/json' } });
-      console.log('Resposta da API:', response);
 
       if (response.status === 200) {
         const { token } = response.data;
-        console.log('Token recebido:', token);
-
         let role;
         try {
           const decoded = jwtDecode(token);
           role = decoded.role;
-          console.log('Campo role decodificado do token:', role);
         } catch (err) {
-          console.error('Erro ao decodificar o token:', err);
           setGeneralError('Erro ao processar informações do usuário');
           return;
         }
@@ -62,26 +56,17 @@ const Login = () => {
         localStorage.setItem('authToken', token);
 
         if (role === 'ADMIN') {
-          console.log('Usuário é ADMIN, redirecionando para /AdminDashboard');
           navigate('/AdminDashboard');
         } else if (role === 'USER') {
-          console.log('Usuário é USER, redirecionando para /Form');
           navigate('/Form');
         } else {
-          console.log('Role desconhecido:', role);
           setGeneralError('Role desconhecido');
         }
       } else {
         setGeneralError('Email ou senha incorretos');
-        console.log('Email ou senha incorretos');
       }
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        setGeneralError('Email ou senha incorretos');
-      } else {
-        setGeneralError('Erro ao conectar com o servidor');
-      }
-      console.error('Erro ao conectar com o servidor:', error);
+      setGeneralError('Email ou senha incorretos');
     } finally {
       setLoading(false);
     }

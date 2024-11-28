@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './styles.css';
 
 const ProfileInfo = () => {
   const [userData, setUserData] = useState(null);
@@ -15,7 +16,6 @@ const ProfileInfo = () => {
         });
         setUserData(response.data);
       } catch (error) {
-        console.error('Erro ao carregar perfil:', error);
         alert('Não foi possível carregar o perfil.');
       }
     };
@@ -28,12 +28,14 @@ const ProfileInfo = () => {
   }
 
   return (
-    <div>
-      <h1>Meu Perfil</h1>
-      <p><strong>Nome:</strong> {userData.nome}</p>
-      <p><strong>Email:</strong> {userData.email}</p>
-      <button onClick={() => navigate('/perfil-update')}>Editar Perfil</button>
-      <button onClick={() => navigate(-1)}>Voltar</button>
+    <div className="profile-page">
+      <div className="profile-container">
+        <h2>Meu Perfil</h2>
+        <p><strong>Nome:</strong> {userData.nome}</p>
+        <p><strong>Email:</strong> {userData.email}</p>
+        <button className="btn btn-primary" onClick={() => navigate('/perfil-update')}>Editar Perfil</button>
+        <button className="btn btn-secondary" onClick={() => navigate(-1)}>Voltar</button>
+      </div>
     </div>
   );
 };

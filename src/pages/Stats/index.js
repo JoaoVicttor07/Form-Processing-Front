@@ -74,7 +74,7 @@ const Stats = () => {
       {error ? (
         <p style={{ color: 'red' }}>Erro: {error}</p>
       ) : (
-        <>
+        <div className="charts-wrapper">
           <div className="chart-container">
             <h2>Distribuição de Usuários</h2>
             <PieChart width={400} height={400}>
@@ -119,7 +119,7 @@ const Stats = () => {
               <Line type="monotone" dataKey="value" stroke="#8884d8" />
             </LineChart>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

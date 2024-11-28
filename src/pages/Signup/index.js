@@ -91,9 +91,7 @@ function Signup() {
         setPriorityError('Erro ao criar conta, tente novamente.');
       }
     } catch (error) {
-      console.error('Erro ao criar conta:', error);
       if (error.response) {
-        console.error('Dados da resposta de erro:', error.response.data);
         setPriorityError(error.response.data.message || 'Erro ao criar conta, tente novamente.');
       } else {
         setPriorityError('Erro ao criar conta, tente novamente.');

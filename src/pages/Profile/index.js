@@ -69,7 +69,6 @@ const UpdateProfile = () => {
     const sanitizedNome = sanitizeInput(nome);
     const sanitizedEmail = sanitizeInput(email);
     const sanitizedSenha = senha ? sanitizeInput(senha) : '';
-    const sanitizedConfirmarSenha = confirmarSenha ? sanitizeInput(confirmarSenha) : '';
 
     if (window.confirm('Tem certeza que deseja atualizar seu perfil? Você será redirecionado para o login após a atualização.')) {
       const userData = { nome: sanitizedNome, email: sanitizedEmail };
