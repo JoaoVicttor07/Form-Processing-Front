@@ -84,7 +84,7 @@ const Form = () => {
   };
 
   const goToUpdateProfile = () => {
-    navigate('/perfil');
+    navigate('/perfil-info');
   };
 
   return (
@@ -171,8 +171,11 @@ const Form = () => {
                       <h4>Motivo: {form.motivo}</h4>
                       <p>Setor: {form.setor}</p>
                       <p>Problema: {form.problema}</p>
+                      <p>Id: {form.id}</p>
                       <p>Status: {form.status}</p>
+                      <p>Mensagem: {form.mensagem}</p>
                       <p>Data de Criação: {new Date(form.dataCriacao).toLocaleString()}</p>
+                      <p>Ultima att: {new Date(form.dataAtualizacao).toLocaleString()}</p>
                     </li>
                   ))
                 ) : (

@@ -1,93 +1,114 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api'; // Importe a configuração da API
-import './styles.css'; // Importe o arquivo de estilos
+import api from '../../services/api';
+import './styles.css';
 
 const UpdateProfile = () => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true); // Para controlar o carregamento dos dados
-  const [isDeleting, setIsDeleting] = useState(false); // Para controlar o estado de exclusão
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
-  const token = localStorage.getItem('authToken'); // Assume que o token JWT está armazenado no localStorage
+  const token = localStorage.getItem('authToken');
 
-  // Função para carregar os dados do usuário
   const fetchUserData = useCallback(async () => {
     setLoading(true);
     setError('');
-
     try {
-      console.log('Fetching user data with token:', token);
+      if (!token) {
+        setError('Token inválido. Faça login novamente.');
+        navigate('/signin');
+        return;
+      }
+
       const response = await api.get('/user/profile', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` },
       });
-      const userData = response.data;
-      setNome(userData.nome);
-      setEmail(userData.email);
-      console.log('User data fetched successfully:', userData);
+      const { nome, email } = response.data;
+      setNome(nome);
+      setEmail(email);
     } catch (error) {
       console.error('Erro ao carregar os dados do usuário:', error);
       setError('Erro ao carregar os dados do usuário.');
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [token, navigate]);
 
   useEffect(() => {
     fetchUserData();
   }, [fetchUserData]);
 
+  const isFormValid = () => {
+    const isNomeValid = nome.trim() !== '';
+    const isEmailValid = email.trim() !== '';
+    const isSenhaValid = senha.length >= 6 || senha === '';
+    const isConfirmarSenhaValid = (senha === confirmarSenha || senha === '') && (confirmarSenha !== '');
+
+    return isNomeValid && isEmailValid && isSenhaValid && isConfirmarSenhaValid;
+  };
+
   const sanitizeInput = (input) => {
     return input.replace(/[^a-zA-Z0-9Çç~´@.áéíóúâêîôûãõäëïöüÁÉÍÓÚÂÊÎÔÛÃÕÄËÏÖÜ ]/g, '');
   };
+  
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     setMessage('');
     setError('');
 
-    try {
-      await api.put('/user/update', { nome: sanitizeInput(nome), email: sanitizeInput(email), senha: sanitizeInput(senha) }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setMessage('Perfil atualizado com sucesso.');
-    } catch (error) {
-      console.error('Erro ao atualizar o perfil:', error);
-      setError('Erro ao atualizar o perfil.');
+    if (!isFormValid()) {
+      setError('Todos os campos são obrigatórios e as senhas devem ter pelo menos 6 caracteres e coincidir.');
+      return;
+    }
+
+    if (window.confirm('Tem certeza que deseja atualizar seu perfil? Você será redirecionado para o login após a atualização.')) {
+      const userData = { nome, email };
+      if (senha) {
+        userData.senha = senha;
+      }
+
+      try {
+        await api.put('/user/update', userData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setMessage('Perfil atualizado com sucesso.');
+        localStorage.removeItem('authToken');
+        setTimeout(() => {
+          navigate('/signin');
+        }, 2000);
+      } catch (error) {
+        console.error('Erro ao atualizar o perfil:', error);
+        setError('Erro ao atualizar o perfil.');
+      }
     }
   };
 
-  const handleDelete = async () => {
-    setIsDeleting(true);
-    setMessage('');
-    setError('');
+  const handleDelete = async (e) => {
+    e.preventDefault();
 
-    try {
-      await api.delete('/user/delete', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      localStorage.removeItem('authToken');
-      navigate('/signin');
-    } catch (error) {
-      console.error('Erro ao excluir o perfil:', error);
-      setError('Erro ao excluir o perfil.');
-    } finally {
-      setIsDeleting(false);
+    if (window.confirm("Tem certeza que deseja excluir sua conta? Esta ação é irreversível.")) {
+      try {
+        await api.delete('/user/delete', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        alert('Conta excluída com sucesso.');
+        localStorage.removeItem('authToken');
+        navigate('/signup');
+      } catch (error) {
+        console.error('Erro ao excluir a conta:', error);
+        setError('Erro ao excluir a conta.');
+      }
     }
   };
 
   const handleBack = () => {
-    navigate(-1); // Navega para a página anterior
+    navigate(-1);
   };
 
   return (
@@ -103,7 +124,7 @@ const UpdateProfile = () => {
               id="nome"
               type="text"
               value={nome}
-              onChange={(e) => setNome(sanitizeInput(e.target.value))}
+              onChange={(e) => setNome(e.target.value)}
               required
             />
           </div>
@@ -113,27 +134,38 @@ const UpdateProfile = () => {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(sanitizeInput(e.target.value))}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="senha">Senha:</label>
+            <label htmlFor="senha">Nova Senha:</label>
             <input
               id="senha"
               type="password"
               value={senha}
-              onChange={(e) => setSenha(sanitizeInput(e.target.value))}
+              onChange={(e) => setSenha(e.target.value)}
+              minLength="6"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="confirmarSenha">Confirmar Nova Senha:</label>
+            <input
+              id="confirmarSenha"
+              type="password"
+              value={confirmarSenha}
+              onChange={(e) => setConfirmarSenha(e.target.value)}
+              minLength="6"
             />
           </div>
           {message && <p className="success-message">{message}</p>}
           {error && <p className="error-message">{error}</p>}
-          <button type="submit" className="btn btn-primary">Atualizar</button>
+          <div className="form-actions">
+            <button type="submit" className="btn btn-primary" disabled={!isFormValid()}>Atualizar</button>
+            <button type="button" onClick={handleDelete} className="btn btn-danger">Excluir Conta</button>
+          </div>
         </form>
       )}
-      <button onClick={handleDelete} disabled={isDeleting} className="btn btn-danger">
-        {isDeleting ? 'Excluindo...' : 'Excluir Perfil'}
-      </button>
       <button onClick={handleBack} className="btn btn-secondary">Voltar</button>
     </div>
   );
