@@ -175,19 +175,19 @@ color: rgba(0, 0, 0, 0.7);
 }
 
 .ticket-details button.resolve {
-  background-color: #28A745;
+  background-color: #007bff;
 }
 
 .ticket-details button.resolve:hover {
-  background-color: #218838;
+  background-color: #0056b3;
 }
 
 .ticket-details button.delete {
-  background-color: #DC3545;
+  background-color: #00FF7F;
 }
 
 .ticket-details button.delete:hover {
-  background-color: #c82333;
+  background-color: #228B22;
 }
 
 .ticket-details button.close {
@@ -211,7 +211,7 @@ color: rgba(0, 0, 0, 0.7);
 }
 
 /* Novas Estilizações */
-.modal {
+#modal-admin-msg {
   position: fixed;
   top: 0;
   left: 0;
@@ -223,15 +223,16 @@ color: rgba(0, 0, 0, 0.7);
   justify-content: center;
 }
 
-.modal-content {
-  background-color: rgba(0, 0, 0, 0.7);
+#modal-admin-msg-content {
+  background-color: rgba(0, 0, 0, 0.9);
   padding: 20px;
+  border: 1px solid #ffffff;
   border-radius: 8px;
   text-align: center;
   color: #ffffff;
 }
 
-.modal-content textarea {
+#modal-admin-msg-content textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #ffffff;
@@ -243,7 +244,7 @@ color: rgba(0, 0, 0, 0.7);
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.modal-content textarea:focus {
+#modal-admin-msg-content textarea:focus {
   border-color: #00d0ff;
   box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
   outline: none;
@@ -267,14 +268,15 @@ color: rgba(0, 0, 0, 0.7);
 }
 
 .success-message-content {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.9);
+  border: 1px solid #ffffff;
   padding: 20px;
   border-radius: 8px;
   text-align: center;
   color: #ffffff;
 }
 
-.modal-content button, .success-message-content button {
+#modal-admin-msg-content button, .success-message-content button {
   display: inline-block;
   padding: 10px 20px;
   margin: 10px 5px;
@@ -288,6 +290,6 @@ color: rgba(0, 0, 0, 0.7);
   color: white;
 }
 
-.modal-content button:hover, .success-message-content button:hover {
+#modal-admin-msg-content button:hover, .success-message-content button:hover {
   background-color: #0056b3;
 }

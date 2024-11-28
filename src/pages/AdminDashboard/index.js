@@ -202,8 +202,8 @@ const AdminDashboard = () => {
         )}
       </div>
       {showMessageModal && (
-        <div className="modal">
-          <div className="modal-content">
+        <div id="modal-admin-msg">
+          <div id="modal-admin-msg-content">
             <h3>Enviar Mensagem</h3>
             <textarea
               value={message}

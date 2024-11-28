@@ -141,8 +141,8 @@ const Form = () => {
         </form>
 
         {showModal && (
-          <div className="modal">
-            <div className="modal-content">
+          <div id="modal-form">
+            <div id="modal-form-content">
               <h3>Formulário cadastrado com sucesso!</h3>
               <button onClick={closeModal}>Ok</button>
             </div>
