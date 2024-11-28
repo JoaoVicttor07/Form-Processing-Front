@@ -43,19 +43,18 @@ const UpdateProfile = () => {
     fetchUserData();
   }, [fetchUserData]);
 
-  const isFormValid = () => {
-    const isNomeValid = nome.trim() !== '';
-    const isEmailValid = email.trim() !== '';
-    const isSenhaValid = senha.length >= 6 || senha === '';
-    const isConfirmarSenhaValid = (senha === confirmarSenha || senha === '') && (confirmarSenha !== '');
-
-    return isNomeValid && isEmailValid && isSenhaValid && isConfirmarSenhaValid;
-  };
-
   const sanitizeInput = (input) => {
     return input.replace(/[^a-zA-Z0-9Çç~´@.áéíóúâêîôûãõäëïöüÁÉÍÓÚÂÊÎÔÛÃÕÄËÏÖÜ ]/g, '');
   };
-  
+
+  const isFormValid = () => {
+    const isNomeValid = nome.trim() !== '';
+    const isEmailValid = email.trim() !== '';
+    const isSenhaValid = senha.length >= 6;
+    const isConfirmarSenhaValid = confirmarSenha.length >= 6 && senha === confirmarSenha;
+
+    return isNomeValid && isEmailValid && isSenhaValid && isConfirmarSenhaValid;
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -67,10 +66,15 @@ const UpdateProfile = () => {
       return;
     }
 
+    const sanitizedNome = sanitizeInput(nome);
+    const sanitizedEmail = sanitizeInput(email);
+    const sanitizedSenha = senha ? sanitizeInput(senha) : '';
+    const sanitizedConfirmarSenha = confirmarSenha ? sanitizeInput(confirmarSenha) : '';
+
     if (window.confirm('Tem certeza que deseja atualizar seu perfil? Você será redirecionado para o login após a atualização.')) {
-      const userData = { nome, email };
-      if (senha) {
-        userData.senha = senha;
+      const userData = { nome: sanitizedNome, email: sanitizedEmail };
+      if (sanitizedSenha) {
+        userData.senha = sanitizedSenha;
       }
 
       try {

@@ -1,0 +1,31 @@
+.stats-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stats-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.chart-container {
+  margin: 40px 0;
+  text-align: center;
+  color: black;
+}
+
+.chart-container h2 {
+  margin-bottom: 20px;
+  color: #555;
+}
+
+p {
+  font-size: 16px;
+  color: #666;
+}
