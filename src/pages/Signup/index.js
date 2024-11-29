@@ -102,61 +102,63 @@ function Signup() {
   };
 
   return (
-    <div className="signup-page">
+    <div>
       <RealTimeStats /> { }
-      <img src="/logoyour.png" alt="Logo" className="logo" />
+      <img src='/logoyour.png' alt="logo"/>
       <div className="signup-container">
         <h2>Cadastro de Usuário</h2>
         {priorityError && <div className="error-message">{priorityError}</div>}
         <form onSubmit={handleSignup}>
           <div>
-            <label htmlFor="nome">Nome:</label>
             {fieldErrors.nome && <span className="error-asterisk">*</span>}
             <input
               id="nome"
               type="text"
               value={nome}
+              placeholder='Nome'
               onChange={(e) => setNome(sanitizeInput(e.target.value))}
               className={fieldErrors.nome ? 'input-error' : ''}
             />
           </div>
           <div>
-            <label htmlFor="email">Email:</label>
             {fieldErrors.email && <span className="error-asterisk">*</span>}
             <input
               id="email"
               type="email"
               value={email}
+              placeholder='E-mail'
               onChange={(e) => setEmail(e.target.value)}
               className={fieldErrors.email ? 'input-error' : ''}
             />
           </div>
           <div>
-            <label htmlFor="senha">Senha:</label>
             {fieldErrors.senha && <span className="error-asterisk">*</span>}
             <input
               id="senha"
               type="password"
               value={senha}
+              placeholder='Senha'
               onChange={(e) => setSenha(e.target.value)}
               className={fieldErrors.senha ? 'input-error' : ''}
             />
           </div>
           <div>
-            <label htmlFor="confirmSenha">Confirme sua senha:</label>
             {fieldErrors.confirmSenha && <span className="error-asterisk">*</span>}
             <input
               id="confirmSenha"
               type="password"
               value={confirmSenha}
+              placeholder='Confirme sua senha'
               onChange={(e) => setConfirmSenha(e.target.value)}
               className={fieldErrors.confirmSenha ? 'input-error' : ''}
             />
           </div>
-          <ReCAPTCHA
-            sitekey="6LcBHYsqAAAAAIz6nDnaCMMlKOtEAsg5rsc80jkM"
-            onChange={handleCaptchaChange}
-          />
+          <div>
+            <ReCAPTCHA
+              sitekey="6LcBHYsqAAAAAIz6nDnaCMMlKOtEAsg5rsc80jkM"
+              onChange={handleCaptchaChange}
+            />
+          </div>
           <button type="submit" disabled={!captchaValidated || loading} className="button-loading">
             {loading ? (
               <>

@@ -77,15 +77,16 @@ const Login = () => {
       <RealTimeStats /> { }
       <img src="/logoyour.png" alt="Logo" className="logo" />
       <div className="login-container">
-        <h3>Inicie sessão na Your Ticket</h3>
+        <h2>Inicie sessão na Your Ticket</h2>
         {generalError && <div className="error-message" aria-live="polite">{generalError}</div>}
         <div>
           <label htmlFor="email">
-            Email:<span className="error-asterisk">{fieldErrors.email && '*'}</span>
+            <span className="error-asterisk">{fieldErrors.email && '*'}</span>
           </label>
           <input
             id="email"
             type="email"
+            placeholder='E-mail'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={fieldErrors.email ? 'input-error' : ''}
@@ -94,11 +95,12 @@ const Login = () => {
         </div>
         <div>
           <label htmlFor="senha">
-            Senha:<span className="error-asterisk">{fieldErrors.senha && '*'}</span>
+            <span className="error-asterisk">{fieldErrors.senha && '*'}</span>
           </label>
           <input
             id="senha"
             type="password"
+            placeholder='Senha'
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
             className={fieldErrors.senha ? 'input-error' : ''}
@@ -112,7 +114,7 @@ const Login = () => {
               <div className="spinner"></div>
             </>
           ) : (
-            'Login'
+            'Acessar'
           )}
         </button>
         <div className="signup-link">

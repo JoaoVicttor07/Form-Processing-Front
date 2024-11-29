@@ -9,6 +9,20 @@
   align-items: center;
 }
 
+.user-list-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: 1px solid #ffffff;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
 .logout-button {
   position: fixed;
   top: 10px;
@@ -23,9 +37,12 @@
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.logout-button:hover {
-  background-color: #00d0ff;
-  box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+.logout-button:hover, 
+.user-list-button:hover {
+  background-color: #ffffff;
+  color: black;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  transform: scale(1.03);
 }
 
 /* Conteúdo Principal */
@@ -36,16 +53,18 @@
   padding: 20px;
   width: 100%;
   max-width: 1200px;
-  margin-top: 60px; /* Espaço para o botão de logout */
+  margin-top: 60px;
 }
 
 .filters {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.228);
+  backdrop-filter: blur(30px);
   padding: 20px;
-  border-radius: 10px;
+  border: 0.1px solid #ffffff9e;
+  border-radius: 19px;
   margin-bottom: 20px;
   width: 100%;
   max-width: 400px;
@@ -68,19 +87,27 @@
   margin-bottom: 10px;
   width: 100%;
   box-sizing: border-box;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s ease-in-out;
+}
+
+.filters input::placeholder {
+  color: #ffffff; /* Escolha a cor desejada */
+  opacity: 1; /* Define a opacidade (padrão é 0.5) */
 }
 
 .filters input:focus,
 .filters select:focus {
-  border-color: #00d0ff;
-  box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+  border-color: #ffffff;
+  box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.3);
+  background-color: transparent;
   outline: none;
 }
 
 .filters input:hover,
 .filters select:hover {
-  border-color: #00d0ff;
+  border-color: #ffffff;
+  transform: scale(1.03);
+  outline: none;
 }
 
 .filters select option {
@@ -96,12 +123,14 @@ color: rgba(0, 0, 0, 0.7);
 .ticket-list {
   background-color: rgba(0, 0, 0, 0.7);
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 19px;
+  border: 0.1px solid #ffffff9e;
   width: 100%;
   max-width: 800px;
   max-height: 550px;
   overflow-y: auto;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.228);
+  backdrop-filter: blur(30px);
 }
 
 .ticket-list h2 {
@@ -133,18 +162,20 @@ color: rgba(0, 0, 0, 0.7);
 }
 
 .ticket-details {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.228);
+  backdrop-filter: blur(30px);
+  border: 0.1px solid #ffffff9e;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 19px;
   width: 100%;
   max-width: 800px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   margin-top: 20px;
-  overflow: auto; /* Adiciona rolagem se o conteúdo for grande */
+  overflow: auto;
 }
 
 .ticket-details h2 {
-  color: #00d0ff;
+  color: #ffffff;
   margin-bottom: 20px;
 }
 
@@ -161,41 +192,101 @@ color: rgba(0, 0, 0, 0.7);
   border: none;
   border-radius: 8px;
   color: rgb(0, 0, 0);
-  background-color: #ffffff;
+  background-color: #d12a2a;
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .ticket-details button:not(:last-child) {
-  margin-right: 10px; /* Adiciona espaçamento entre os botões */
+  margin-right: 10px;
 }
 
 .ticket-details button:hover {
-  background-color: #00d0ff;
-  box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(216, 216, 216, 0.5);
 }
 
 .ticket-details button.resolve {
-  background-color: #007bff;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
 }
 
 .ticket-details button.resolve:hover {
-  background-color: #0056b3;
+  background-color: #5a6268;
+  color: rgb(255, 255, 255);
 }
 
 .ticket-details button.delete {
-  background-color: #00FF7F;
+  background-color: #0080ff;
+  color: white;
 }
 
 .ticket-details button.delete:hover {
-  background-color: #228B22;
+  background-color: #006dda;
 }
 
 .ticket-details button.close {
-  background-color: #6C757D;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
 }
 
 .ticket-details button.close:hover {
   background-color: #5a6268;
+  color: rgb(255, 255, 255);
+}
+
+#delete-confirmation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#delete-confirmation-modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+#delete-confirmation-modal-content p {
+  margin-bottom: 20px;
+  color: black;
+  font-weight: bolder;
+}
+
+#btn-confirmar-delete, #btn-voltar {
+  margin: 0 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#btn-confirmar-delete {
+  background-color: red;
+  color: white;
+}
+
+#btn-confirmar-delete:hover {
+  background-color: darkred;
+}
+
+#btn-voltar {
+  background-color: gray;
+  color: white;
+}
+
+#btn-voltar:hover {
+  background-color: darkgray;
 }
 
 /* Responsividade */
@@ -210,7 +301,6 @@ color: rgba(0, 0, 0, 0.7);
   }
 }
 
-/* Novas Estilizações */
 #modal-admin-msg {
   position: fixed;
   top: 0;
@@ -292,4 +382,12 @@ color: rgba(0, 0, 0, 0.7);
 
 #modal-admin-msg-content button:hover, .success-message-content button:hover {
   background-color: #0056b3;
+}
+
+/* para telas menores que 2560px e até 1600px */
+@media (min-width: 1024px) and (max-width: 1600px) {
+  .filters, .ticket-list {
+    padding: 50px;
+    height: 300px;
+  }
 }

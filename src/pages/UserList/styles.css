@@ -1,0 +1,44 @@
+.user-list-page {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-table th,
+.user-table td {
+    border: 1px solid #000000;
+    padding: 8px;
+    color: #f4f4f4;
+    background-color: rgba(0, 0, 0, 0.228);
+    backdrop-filter: blur(30px);
+}
+
+.user-table th {
+    background-color: rgba(0, 0, 0, 0.228);
+    text-align: left;
+}
+
+.back-button-userlist {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: none;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.back-button-userlist:hover {
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgb(255, 255, 255);
+    color: black;
+}

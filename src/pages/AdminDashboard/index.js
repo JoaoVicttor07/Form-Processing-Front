@@ -14,6 +14,7 @@ const AdminDashboard = () => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showInProgressMessage, setShowInProgressMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
 
   useEffect(() => {
     document.body.classList.add('admin-background');
@@ -33,7 +34,6 @@ const AdminDashboard = () => {
         });
         setTickets(response.data);
       } catch (error) {
-        console.error('Erro ao buscar tickets:', error);
       }
     };
 
@@ -55,7 +55,6 @@ const AdminDashboard = () => {
       const token = localStorage.getItem('authToken');
       const ticket = tickets.find(ticket => ticket.id === id);
       if (!ticket) {
-        console.error('Ticket não encontrado com id:', id);
         return;
       }
       await api.patch(`/form/update/${id}`, {
@@ -72,9 +71,7 @@ const AdminDashboard = () => {
         setShowInProgressMessage(true);
       }
     } catch (error) {
-      console.error('Erro ao alterar status do ticket:', error);
       if (error.response) {
-        console.error('Detalhes do erro:', error.response.data);
       }
     }
   };
@@ -89,7 +86,6 @@ const AdminDashboard = () => {
       const token = localStorage.getItem('authToken');
       const ticket = tickets.find(ticket => ticket.id === id);
       if (!ticket) {
-        console.error('Ticket não encontrado com id:', id);
         return;
       }
       await api.patch(`/form/update/${id}`, {
@@ -108,9 +104,35 @@ const AdminDashboard = () => {
       setErrorMessage('');
       setShowSuccessMessage(true);
     } catch (error) {
-      console.error('Erro ao alterar status do ticket:', error);
       if (error.response) {
-        console.error('Detalhes do erro:', error.response.data);
+      }
+    }
+  };
+
+  const handleDeleteTicket = (id) => {
+    setSelectedTicket(tickets.find(ticket => ticket.id === id));
+    setShowDeleteConfirmationModal(true);
+  };
+
+  const confirmDeleteTicket = async () => {
+    if (selectedTicket) {
+      try {
+        const token = localStorage.getItem('authToken');
+        await api.delete(`/form/delete/${selectedTicket.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setTickets(tickets.filter(ticket => ticket.id !== selectedTicket.id));
+        setShowDeleteConfirmationModal(false);
+        setSelectedTicket(null);
+        alert('Ticket excluído com sucesso!');
+      } catch (error) {;
+        if (error.response) {
+          alert(`Erro: ${error.response.data.message || 'Não foi possível excluir o ticket'}`);
+        } else {
+          alert('Erro inesperado ao excluir o ticket.');
+        }
       }
     }
   };
@@ -120,6 +142,10 @@ const AdminDashboard = () => {
     setMessage('');
     setErrorMessage('');
     setShowMessageModal(true);
+  };
+
+  const handleGoToUserList = () => {
+    navigate('/users');
   };
 
   const filteredTickets = tickets.filter(ticket => {
@@ -138,15 +164,15 @@ const AdminDashboard = () => {
       const date = new Date(formattedDate);
       return date.toLocaleString();
     } catch (error) {
-      console.error('Erro ao formatar a data:', error);
       return 'Data inválida';
     }
   };
 
   return (
     <div className="admin-dashboard">
-      <RealTimeStats /> { }
+      <RealTimeStats />
       <button className="logout-button" onClick={handleLogout}>Logout</button>
+      <button className="user-list-button" onClick={handleGoToUserList}>Visualizar Usuarios</button>
       <div className="content">
         <div className="main-content">
           <div className="filters">
@@ -193,6 +219,7 @@ const AdminDashboard = () => {
             <p>Status: {selectedTicket.status}</p>
             <p>Data de Criação: {parseDate(selectedTicket.dataCriacao)}</p>
             <button className="close" onClick={() => setSelectedTicket(null)}>Fechar</button>
+            <button className="delete" onClick={() => handleDeleteTicket(selectedTicket.id)}>Excluir ticket</button>
             <button className="resolve" onClick={() => handleStatusChange(selectedTicket.id, 'ANDAMENTO')}>Marcar como em andamento</button>
             <button className="delete" onClick={() => handleRejectTicket(selectedTicket.id)}>Marcar como resolvido</button>
           </div>
@@ -228,6 +255,15 @@ const AdminDashboard = () => {
           <div className="success-message-content">
             <h3>Status do ticket alterado para Em andamento com sucesso!</h3>
             <button onClick={() => setShowInProgressMessage(false)}>Fechar</button>
+          </div>
+        </div>
+      )}
+      {showDeleteConfirmationModal && (
+        <div id="delete-confirmation-modal">
+          <div id="delete-confirmation-modal-content">
+            <p>Tem certeza que deseja excluir este ticket?</p>
+            <button id="btn-confirmar-delete" onClick={confirmDeleteTicket}>Confirmar</button>
+            <button id="btn-voltar" onClick={() => setShowDeleteConfirmationModal(false)}>Voltar</button>
           </div>
         </div>
       )}

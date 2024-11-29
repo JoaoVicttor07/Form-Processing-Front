@@ -17,7 +17,6 @@ const MeusFormularios = () => {
       const response = await api.get('/form/me');
       setFormularios(response.data);
     } catch (error) {
-      console.error('Erro ao carregar os formulários:', error);
       setError('Não foi possível carregar os formulários. Tente novamente mais tarde.');
     } finally {
       setLoading(false);

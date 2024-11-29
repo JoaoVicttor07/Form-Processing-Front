@@ -11,6 +11,8 @@ const UpdateProfile = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showDeleteConfirmationModal, setShowDeleteConfirmationModal] = useState(false);
 
   const navigate = useNavigate();
   const token = localStorage.getItem('authToken');
@@ -32,7 +34,6 @@ const UpdateProfile = () => {
       setNome(nome);
       setEmail(email);
     } catch (error) {
-      console.error('Erro ao carregar os dados do usuário:', error);
       setError('Erro ao carregar os dados do usuário.');
     } finally {
       setLoading(false);
@@ -47,22 +48,26 @@ const UpdateProfile = () => {
     return input.replace(/[^a-zA-Z0-9Çç~´@.áéíóúâêîôûãõäëïöüÁÉÍÓÚÂÊÎÔÛÃÕÄËÏÖÜ ]/g, '');
   };
 
+  const isEmailValid = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const isFormValid = () => {
     const isNomeValid = nome.trim() !== '';
-    const isEmailValid = email.trim() !== '';
+    const isEmailValidFormat = isEmailValid(email);
     const isSenhaValid = senha.length >= 6;
     const isConfirmarSenhaValid = confirmarSenha.length >= 6 && senha === confirmarSenha;
 
-    return isNomeValid && isEmailValid && isSenhaValid && isConfirmarSenhaValid;
+    return isNomeValid && isEmailValidFormat && isSenhaValid && isConfirmarSenhaValid;
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
+  const handleUpdate = async () => {
     setMessage('');
     setError('');
 
     if (!isFormValid()) {
-      setError('Todos os campos são obrigatórios e as senhas devem ter pelo menos 6 caracteres e coincidir.');
+      setError('Todos os campos são obrigatórios, o e-mail deve ser válido e as senhas devem ter pelo menos 6 caracteres e coincidir.');
       return;
     }
 
@@ -70,48 +75,58 @@ const UpdateProfile = () => {
     const sanitizedEmail = sanitizeInput(email);
     const sanitizedSenha = senha ? sanitizeInput(senha) : '';
 
-    if (window.confirm('Tem certeza que deseja atualizar seu perfil? Você será redirecionado para o login após a atualização.')) {
-      const userData = { nome: sanitizedNome, email: sanitizedEmail };
-      if (sanitizedSenha) {
-        userData.senha = sanitizedSenha;
-      }
+    const userData = { nome: sanitizedNome, email: sanitizedEmail };
+    if (sanitizedSenha) {
+      userData.senha = sanitizedSenha;
+    }
 
-      try {
-        await api.put('/user/update', userData, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setMessage('Perfil atualizado com sucesso.');
-        localStorage.removeItem('authToken');
-        setTimeout(() => {
-          navigate('/signin');
-        }, 2000);
-      } catch (error) {
-        console.error('Erro ao atualizar o perfil:', error);
-        setError('Erro ao atualizar o perfil.');
-      }
+    try {
+      await api.put('/user/update', userData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setMessage('Perfil atualizado com sucesso.');
+      localStorage.removeItem('authToken');
+      setTimeout(() => {
+        navigate('/signin');
+      }, 2000);
+    } catch (error) {
+      setError('Erro ao atualizar o perfil.');
     }
   };
 
-  const handleDelete = async (e) => {
-    e.preventDefault();
-
-    if (window.confirm("Tem certeza que deseja excluir sua conta? Esta ação é irreversível.")) {
-      try {
-        await api.delete('/user/delete', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        alert('Conta excluída com sucesso.');
-        localStorage.removeItem('authToken');
-        navigate('/signup');
-      } catch (error) {
-        console.error('Erro ao excluir a conta:', error);
-        setError('Erro ao excluir a conta.');
-      }
+  const handleDelete = async () => {
+    try {
+      await api.delete('/user/delete', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      alert('Conta excluída com sucesso.');
+      localStorage.removeItem('authToken');
+      navigate('/signup');
+    } catch (error) {
+      setError('Erro ao excluir a conta.');
     }
   };
 
   const handleBack = () => {
     navigate(-1);
+  };
+
+  const openConfirmationModal = (e) => {
+    e.preventDefault();
+    setShowConfirmationModal(true);
+  };
+
+  const closeConfirmationModal = () => {
+    setShowConfirmationModal(false);
+  };
+
+  const openDeleteConfirmationModal = (e) => {
+    e.preventDefault();
+    setShowDeleteConfirmationModal(true);
+  };
+
+  const closeDeleteConfirmationModal = () => {
+    setShowDeleteConfirmationModal(false);
   };
 
   return (
@@ -120,14 +135,14 @@ const UpdateProfile = () => {
       {loading ? (
         <p>Carregando...</p>
       ) : (
-        <form onSubmit={handleUpdate} className="profile-form">
+        <form onSubmit={openConfirmationModal} className="profile-form">
           <div className="form-group">
             <label htmlFor="nome">Nome:</label>
             <input
               id="nome"
               type="text"
               value={nome}
-              onChange={(e) => setNome(e.target.value)}
+              onChange={(e) => setNome(sanitizeInput(e.target.value))}
               required
             />
           </div>
@@ -137,7 +152,7 @@ const UpdateProfile = () => {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(sanitizeInput(e.target.value))}
               required
             />
           </div>
@@ -147,7 +162,7 @@ const UpdateProfile = () => {
               id="senha"
               type="password"
               value={senha}
-              onChange={(e) => setSenha(e.target.value)}
+              onChange={(e) => setSenha(sanitizeInput(e.target.value))}
               minLength="6"
             />
           </div>
@@ -157,7 +172,7 @@ const UpdateProfile = () => {
               id="confirmarSenha"
               type="password"
               value={confirmarSenha}
-              onChange={(e) => setConfirmarSenha(e.target.value)}
+              onChange={(e) => setConfirmarSenha(sanitizeInput(e.target.value))}
               minLength="6"
             />
           </div>
@@ -165,11 +180,35 @@ const UpdateProfile = () => {
           {error && <p className="error-message">{error}</p>}
           <div className="form-actions">
             <button type="submit" className="btn btn-primary" disabled={!isFormValid()}>Atualizar</button>
-            <button type="button" onClick={handleDelete} className="btn btn-danger">Excluir Conta</button>
+            <button type="button" onClick={openDeleteConfirmationModal} className="btn btn-danger">Excluir Conta</button>
           </div>
         </form>
       )}
       <button onClick={handleBack} className="btn btn-secondary">Voltar</button>
+
+      {showConfirmationModal && (
+        <div id="confirmation-modal">
+          <div id="confirmation-modal-content">
+            <p>Tem certeza que deseja atualizar seu perfil? Você será redirecionado para o login após a atualização.</p>
+            <div className="btn-container">
+              <button id="btn-confirmar-update" onClick={handleUpdate}>Confirmar ação</button>
+              <button id="btn-cancelar" onClick={closeConfirmationModal}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeleteConfirmationModal && (
+        <div id="delete-confirmation-modal">
+          <div id="delete-confirmation-modal-content">
+            <p>Tem certeza que deseja excluir sua conta? Esta ação é irreversível.</p>
+            <div className="btn-container">
+              <button id="btn-confirmar-delete" onClick={handleDelete}>Confirmar Ação</button>
+              <button id="btn-cancelar" onClick={closeDeleteConfirmationModal}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
