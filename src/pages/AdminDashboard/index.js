@@ -115,11 +115,39 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteTicket = async (id) => {
+    if (window.confirm('Tem certeza que deseja excluir este ticket?')) {
+      try {
+        const token = localStorage.getItem('authToken');
+        await api.delete(`/form/delete/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+  
+        setTickets(tickets.filter(ticket => ticket.id !== id));
+        alert('Ticket excluído com sucesso!');
+      } catch (error) {
+        console.error('Erro ao excluir ticket:', error);
+        if (error.response) {
+          console.error('Detalhes do erro:', error.response.data);
+          alert(`Erro: ${error.response.data.message || 'Não foi possível excluir o ticket'}`);
+        } else {
+          alert('Erro inesperado ao excluir o ticket.');
+        }
+      }
+    }
+  };
+  
   const handleRejectTicket = (id) => {
     setSelectedTicket(tickets.find(ticket => ticket.id === id));
     setMessage('');
     setErrorMessage('');
     setShowMessageModal(true);
+  };
+
+  const handleGoToUserList = () => {
+    navigate('/users');
   };
 
   const filteredTickets = tickets.filter(ticket => {
@@ -147,6 +175,7 @@ const AdminDashboard = () => {
     <div className="admin-dashboard">
       <RealTimeStats /> { }
       <button className="logout-button" onClick={handleLogout}>Logout</button>
+      <button className="user-list-button" onClick={handleGoToUserList}>Visualizar Usuarios</button>
       <div className="content">
         <div className="main-content">
           <div className="filters">
@@ -193,6 +222,7 @@ const AdminDashboard = () => {
             <p>Status: {selectedTicket.status}</p>
             <p>Data de Criação: {parseDate(selectedTicket.dataCriacao)}</p>
             <button className="close" onClick={() => setSelectedTicket(null)}>Fechar</button>
+            <button className="delete" onClick={() => handleDeleteTicket(selectedTicket.id)}>Excluir ticket</button>
             <button className="resolve" onClick={() => handleStatusChange(selectedTicket.id, 'ANDAMENTO')}>Marcar como em andamento</button>
             <button className="delete" onClick={() => handleRejectTicket(selectedTicket.id)}>Marcar como resolvido</button>
           </div>

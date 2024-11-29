@@ -1,0 +1,39 @@
+.user-list-page {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-table th,
+.user-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.user-table th {
+    background-color: #f4f4f4;
+    text-align: left;
+}
+
+.back-button-userlist {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: none;
+    border: 1px solid #ffffff;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.back-button-userlist:hover {
+    background-color: #00d0ff;
+    box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+}

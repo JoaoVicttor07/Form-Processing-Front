@@ -10,6 +10,7 @@ import MeusFormularios from './pages/MeusFormularios';
 import UpdateProfile from './pages/Profile';
 import ProfileInfo from './pages/ProfileInfo';
 import Stats from './pages/Stats';
+import UserList from './pages/UserList';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/perfil-update" element={<UpdateProfile />} />
         <Route path="/perfil-info" element={<ProfileInfo/> } /> 
         <Route path="/stats" element={<Stats/> } /> 
+        <Route path="/users" element={<UserList />} />
       </Routes>
     </Router>
   );

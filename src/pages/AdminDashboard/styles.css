@@ -9,6 +9,20 @@
   align-items: center;
 }
 
+.user-list-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: 1px solid #ffffff;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
 .logout-button {
   position: fixed;
   top: 10px;
@@ -23,7 +37,7 @@
   transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.logout-button:hover {
+.logout-button :hover, .user-list-button:hover {
   background-color: #00d0ff;
   box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
 }
