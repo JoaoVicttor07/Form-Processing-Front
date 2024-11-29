@@ -97,6 +97,7 @@ color: rgba(0, 0, 0, 0.7);
   background-color: rgba(0, 0, 0, 0.7);
   padding: 20px;
   border-radius: 10px;
+  border: 0.1px solid #ffffff9e;
   width: 100%;
   max-width: 800px;
   max-height: 550px;
