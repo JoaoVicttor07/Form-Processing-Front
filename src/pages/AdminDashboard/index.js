@@ -34,7 +34,6 @@ const AdminDashboard = () => {
         });
         setTickets(response.data);
       } catch (error) {
-        console.error('Erro ao buscar tickets:', error);
       }
     };
 
@@ -56,7 +55,6 @@ const AdminDashboard = () => {
       const token = localStorage.getItem('authToken');
       const ticket = tickets.find(ticket => ticket.id === id);
       if (!ticket) {
-        console.error('Ticket não encontrado com id:', id);
         return;
       }
       await api.patch(`/form/update/${id}`, {
@@ -73,9 +71,7 @@ const AdminDashboard = () => {
         setShowInProgressMessage(true);
       }
     } catch (error) {
-      console.error('Erro ao alterar status do ticket:', error);
       if (error.response) {
-        console.error('Detalhes do erro:', error.response.data);
       }
     }
   };
@@ -90,7 +86,6 @@ const AdminDashboard = () => {
       const token = localStorage.getItem('authToken');
       const ticket = tickets.find(ticket => ticket.id === id);
       if (!ticket) {
-        console.error('Ticket não encontrado com id:', id);
         return;
       }
       await api.patch(`/form/update/${id}`, {
@@ -109,9 +104,7 @@ const AdminDashboard = () => {
       setErrorMessage('');
       setShowSuccessMessage(true);
     } catch (error) {
-      console.error('Erro ao alterar status do ticket:', error);
       if (error.response) {
-        console.error('Detalhes do erro:', error.response.data);
       }
     }
   };
@@ -134,10 +127,8 @@ const AdminDashboard = () => {
         setShowDeleteConfirmationModal(false);
         setSelectedTicket(null);
         alert('Ticket excluído com sucesso!');
-      } catch (error) {
-        console.error('Erro ao excluir ticket:', error);
+      } catch (error) {;
         if (error.response) {
-          console.error('Detalhes do erro:', error.response.data);
           alert(`Erro: ${error.response.data.message || 'Não foi possível excluir o ticket'}`);
         } else {
           alert('Erro inesperado ao excluir o ticket.');
@@ -173,7 +164,6 @@ const AdminDashboard = () => {
       const date = new Date(formattedDate);
       return date.toLocaleString();
     } catch (error) {
-      console.error('Erro ao formatar a data:', error);
       return 'Data inválida';
     }
   };

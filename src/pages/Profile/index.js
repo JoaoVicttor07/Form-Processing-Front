@@ -34,7 +34,6 @@ const UpdateProfile = () => {
       setNome(nome);
       setEmail(email);
     } catch (error) {
-      console.error('Erro ao carregar os dados do usuário:', error);
       setError('Erro ao carregar os dados do usuário.');
     } finally {
       setLoading(false);
@@ -91,7 +90,6 @@ const UpdateProfile = () => {
         navigate('/signin');
       }, 2000);
     } catch (error) {
-      console.error('Erro ao atualizar o perfil:', error);
       setError('Erro ao atualizar o perfil.');
     }
   };
@@ -105,7 +103,6 @@ const UpdateProfile = () => {
       localStorage.removeItem('authToken');
       navigate('/signup');
     } catch (error) {
-      console.error('Erro ao excluir a conta:', error);
       setError('Erro ao excluir a conta.');
     }
   };
