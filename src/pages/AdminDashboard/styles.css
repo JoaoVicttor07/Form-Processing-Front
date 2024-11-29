@@ -90,19 +90,24 @@
   transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s ease-in-out;
 }
 
+.filters input::placeholder {
+  color: #ffffff; /* Escolha a cor desejada */
+  opacity: 1; /* Define a opacidade (padrão é 0.5) */
+}
+
 .filters input:focus,
 .filters select:focus {
   border-color: #ffffff;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.3);
+  background-color: transparent;
   outline: none;
 }
 
 .filters input:hover,
 .filters select:hover {
-  background-color: #ffffff;
-  color: black;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  border-color: #ffffff;
   transform: scale(1.03);
+  outline: none;
 }
 
 .filters select option {

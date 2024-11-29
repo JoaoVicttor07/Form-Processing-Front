@@ -1,6 +1,7 @@
 .user-list-page {
     padding: 20px;
     font-family: Arial, sans-serif;
+    color: #ffffff;
 }
 
 .user-table {
@@ -18,7 +19,7 @@
 }
 
 .user-table th {
-    background-color: #000000;
+    background-color: rgba(0, 0, 0, 0.228);
     text-align: left;
 }
 
