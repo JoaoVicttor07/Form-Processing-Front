@@ -34,7 +34,6 @@ const UpdateProfile = () => {
       setNome(nome);
       setEmail(email);
     } catch (error) {
-      console.error('Erro ao carregar os dados do usuário:', error);
       setError('Erro ao carregar os dados do usuário.');
     } finally {
       setLoading(false);
@@ -91,7 +90,6 @@ const UpdateProfile = () => {
         navigate('/signin');
       }, 2000);
     } catch (error) {
-      console.error('Erro ao atualizar o perfil:', error);
       setError('Erro ao atualizar o perfil.');
     }
   };
@@ -105,7 +103,6 @@ const UpdateProfile = () => {
       localStorage.removeItem('authToken');
       navigate('/signup');
     } catch (error) {
-      console.error('Erro ao excluir a conta:', error);
       setError('Erro ao excluir a conta.');
     }
   };
@@ -193,8 +190,10 @@ const UpdateProfile = () => {
         <div id="confirmation-modal">
           <div id="confirmation-modal-content">
             <p>Tem certeza que deseja atualizar seu perfil? Você será redirecionado para o login após a atualização.</p>
-            <button className="btn btn-primary" onClick={handleUpdate}>Confirmar ação</button>
-            <button className="btn btn-secondary" onClick={closeConfirmationModal}>Cancelar</button>
+            <div className="btn-container">
+              <button id="btn-confirmar-update" onClick={handleUpdate}>Confirmar ação</button>
+              <button id="btn-cancelar" onClick={closeConfirmationModal}>Cancelar</button>
+            </div>
           </div>
         </div>
       )}
@@ -203,8 +202,10 @@ const UpdateProfile = () => {
         <div id="delete-confirmation-modal">
           <div id="delete-confirmation-modal-content">
             <p>Tem certeza que deseja excluir sua conta? Esta ação é irreversível.</p>
-            <button className="btn btn-danger" onClick={handleDelete}>Confirmar Ação</button>
-            <button className="btn btn-secondary" onClick={closeDeleteConfirmationModal}>Cancelar</button>
+            <div className="btn-container">
+              <button id="btn-confirmar-delete" onClick={handleDelete}>Confirmar Ação</button>
+              <button id="btn-cancelar" onClick={closeDeleteConfirmationModal}>Cancelar</button>
+            </div>
           </div>
         </div>
       )}
