@@ -94,16 +94,19 @@ const Form = () => {
   };
 
   return (
+    <div>
+    <button id="form-logout-button" onClick={handleLogout}>Logout</button>
+    <button id="update-profile-button" onClick={goToUpdateProfile}>Atualizar Perfil</button>
+
     <div className="form-page">
       <RealTimeStats />
       {userName && <p className="welcome-message">Bem-vindo(a), {userName}!</p>}
       <div className="form-container">
-        <button id="form-logout-button" onClick={handleLogout}>Logout</button>
-        <button id="update-profile-button" onClick={goToUpdateProfile}>Atualizar Perfil</button>
+        
         <h2>Formulário de Chamado</h2>
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="motivo">Motivo:</label>
+            <label htmlFor="motivo"></label>
             <input
               id="motivo"
               type="text"
@@ -114,7 +117,7 @@ const Form = () => {
             />
           </div>
           <div>
-            <label htmlFor="setor">Setor:</label>
+            <label htmlFor="setor"></label>
             <select
               id="setor"
               value={setor}
@@ -128,7 +131,7 @@ const Form = () => {
             </select>
           </div>
           <div>
-            <label htmlFor="problema">Problema:</label>
+            <label htmlFor="problema"></label>
             <input
               id="problema"
               type="text"
@@ -150,7 +153,6 @@ const Form = () => {
             </div>
           </div>
         )}
-
         <button onClick={fetchFormularios} className="meus-formularios-button">
           Meus Formulários
         </button>
@@ -188,6 +190,7 @@ const Form = () => {
           </>
         )}
       </div>
+    </div>
     </div>
   );
 };
