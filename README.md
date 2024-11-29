@@ -56,8 +56,8 @@ Para clonar o repositório e instalar as dependências:
 
 - Node.js
 - npm ou yarn
-- Visual Studio Code (VSCode)
-- Git bash (Opcional)
+- Visual Studio Code (Opcional)
+- bash, zsh, fish ou um shell de terminal de sua escolha
 
 <h3>Passo a Passo</h3>
 
@@ -68,7 +68,21 @@ Para clonar o repositório e instalar as dependências:
 2. Acesse o projeto e instale as dependências:
    ```bash
    cd Form-Processing-Front
-   npm install
+   npm install dos seguintes pacotes
+   axios
+   date-fns
+   dompurify
+   form
+   jwt-decode
+   react
+   react-dom
+   react-google-recaptcha
+   react-hook-form
+   react-router-dom
+   react-scripts
+   recharts
+   sockjs-client
+   web-vitals
    ```
 3. Execute o projeto em modo de desenvolvimento:
    ```bash
