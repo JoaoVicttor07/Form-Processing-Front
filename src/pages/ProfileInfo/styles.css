@@ -29,9 +29,10 @@
   }
   
   .profile-container {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.228);
+    backdrop-filter: blur(30px);
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 19px;
     border: 0.1px solid #ffffff9e;
     width: 100%;
     max-width: 800px;
@@ -40,7 +41,7 @@
   }
   
   .profile-container h2 {
-    color: #00d0ff;
+    color: #ffffff;
     margin-bottom: 20px;
     text-align: center;
   }
@@ -72,17 +73,19 @@
     cursor: pointer;
     color: rgb(0, 0, 0);
     background-color: #ffffff;
-    transition: background-color 0.3s, box-shadow 0.3s;
+    transition: background-color 0.3s ease, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   }
   
   .btn:hover {
-    background-color: #00d0ff;
-    box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+    background-color: #ffffff;
+    box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.3);
+    color: black;
+    transform: scale(1.03);
   }
   
   .btn-primary {
-    background-color: #007bff;
-    color: white;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
   }
   
   .btn-danger {
@@ -91,7 +94,8 @@
   }
   
   .btn-secondary {
-    background-color: #6c757d;
+    background-color: #6c757d00;
+    border: 0.1px solid #ffffff;
     color: white;
   }
   
