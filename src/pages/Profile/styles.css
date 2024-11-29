@@ -144,9 +144,11 @@
 }
 
 #confirmation-modal-content, #delete-confirmation-modal-content {
-  background: #fff;
+  background-color: rgba(0, 0, 0, 0.757);
+  backdrop-filter: blur(30px);
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 19px;
+    border: 0.1px solid #ffffff9e;
   text-align: center;
   max-width: 400px;
   width: 100%;
@@ -154,7 +156,7 @@
 
 #confirmation-modal-content p, #delete-confirmation-modal-content p {
   margin-bottom: 20px;
-  color: black;
+  color: rgb(255, 255, 255);
   font-weight: bolder;
 }
 

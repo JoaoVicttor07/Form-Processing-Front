@@ -24,8 +24,8 @@
   }
   
   #profile-logout-button:hover {
-    background-color: #00d0ff;
-    box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgb(255, 255, 255);
   }
   
   .profile-container {
@@ -78,8 +78,9 @@
   
   .btn:hover {
     background-color: #ffffff;
-    box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.349);
     color: black;
+    border: 0.1px solid black;
     transform: scale(1.03);
   }
   
@@ -89,17 +90,21 @@
   }
   
   .btn-danger {
-    background-color: #dc3545;
+    background-color: #ff0000;
     color: white;
   }
-  
+  .btn-danger :hover{
+    background-color: #ff0000;
+    color: white;
+  }
+
   .btn-secondary {
-    background-color: #6c757d00;
+    background-color: #2d8bdd00;
     border: 0.1px solid #ffffff;
     color: white;
   }
   
   .btn:disabled {
-    background-color: #ccc;
+    background-color: #ffffff;
     cursor: not-allowed;
   }
