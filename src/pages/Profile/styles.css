@@ -161,3 +161,54 @@
 #confirmation-modal-content .btn, #delete-confirmation-modal-content .btn {
   margin: 0 10px;
 }
+
+#btn-confirmar-update {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 10px; /* Adiciona espaço à direita */
+}
+
+#btn-confirmar-update:hover {
+  background-color: deepskyblue;
+}
+
+#btn-confirmar-delete {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 10px; /* Adiciona espaço à direita */
+}
+
+#btn-confirmar-delete:hover {
+  background-color: darkred;
+}
+
+#btn-cancelar {
+  background-color: gray;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#btn-cancelar:hover {
+  background-color: darkgray;
+}
+
+/* Estilos para alinhar os botões no modal */
+#confirmation-modal-content .btn-container, #delete-confirmation-modal-content .btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}

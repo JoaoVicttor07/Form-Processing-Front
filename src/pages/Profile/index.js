@@ -193,8 +193,10 @@ const UpdateProfile = () => {
         <div id="confirmation-modal">
           <div id="confirmation-modal-content">
             <p>Tem certeza que deseja atualizar seu perfil? Você será redirecionado para o login após a atualização.</p>
-            <button className="btn btn-primary" onClick={handleUpdate}>Confirmar ação</button>
-            <button className="btn btn-secondary" onClick={closeConfirmationModal}>Cancelar</button>
+            <div className="btn-container">
+              <button id="btn-confirmar-update" onClick={handleUpdate}>Confirmar ação</button>
+              <button id="btn-cancelar" onClick={closeConfirmationModal}>Cancelar</button>
+            </div>
           </div>
         </div>
       )}
@@ -203,8 +205,10 @@ const UpdateProfile = () => {
         <div id="delete-confirmation-modal">
           <div id="delete-confirmation-modal-content">
             <p>Tem certeza que deseja excluir sua conta? Esta ação é irreversível.</p>
-            <button className="btn btn-danger" onClick={handleDelete}>Confirmar Ação</button>
-            <button className="btn btn-secondary" onClick={closeDeleteConfirmationModal}>Cancelar</button>
+            <div className="btn-container">
+              <button id="btn-confirmar-delete" onClick={handleDelete}>Confirmar Ação</button>
+              <button id="btn-cancelar" onClick={closeDeleteConfirmationModal}>Cancelar</button>
+            </div>
           </div>
         </div>
       )}
