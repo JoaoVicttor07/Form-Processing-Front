@@ -19,7 +19,8 @@
 
 <p align="center">
     <img src="./public/imgForm.png" alt="Image Form" width="400px">
-    <img src="./public/imgAdm.png" alt="Image Example" width="400px">
+    <img src="./public/imgLogin.webp" alt="Image Adm" width="400px">
+    <img src="./public/imgRg.webp" alt="Image Login" width="400px">
 </p>
 
 <h2 id="descricao">📄 Descrição</h2>
@@ -30,12 +31,12 @@ Este projeto implementa o frontend do sistema Form-Processing, permitindo que us
 
 O frontend foi desenvolvido utilizando React para criar uma interface moderna e responsiva. Diversas bibliotecas adicionais foram utilizadas para otimizar a experiência do usuário e a comunicação com a API, como:
 
-- @stomp/stompjs para comunicação em tempo real com STOMP sobre WebSockets
 - axios para requisições HTTP
 - dompurify para sanitização de HTML e proteção contra ataques XSS
 - jwt-decode para decodificação de tokens JWT
 - react-router-dom para gerenciamento de rotas no React
-- sockjs-client como cliente para conexões SockJS, utilizado como fallback para WebSockets.
+- react-google-recaptcha para integração do Google reCAPTCHA.
+- recharts para criação de gráficos em React.
 
 Este projeto foi desenvolvido como parte do trabalho da A3, focando em melhorar a comunicação e gestão de solicitações, com uma interface intuitiva que complementa o backend robusto.
 
