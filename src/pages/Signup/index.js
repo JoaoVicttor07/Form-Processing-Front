@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import api from '../../services/api';
+import RealTimeStats from '../RealTimesStats/index';
 import './styles.css';
 
 function Signup() {
@@ -102,6 +103,7 @@ function Signup() {
 
   return (
     <div>
+      <RealTimeStats /> { }
       <img src='/logoyour.png' alt="logo"/>
       <div className="signup-container">
         <h2>Cadastro de Usuário</h2>

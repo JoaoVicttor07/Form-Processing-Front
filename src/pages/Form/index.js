@@ -35,11 +35,17 @@ const Form = () => {
       return;
     }
 
+    const token = localStorage.getItem('authToken');
+
     try {
       const response = await api.post('/form/create', {
         motivo,
         setor,
         problema,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (response.status === 200 || response.status === 201) {
