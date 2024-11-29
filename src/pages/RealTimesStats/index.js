@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import './styles.css';
 
 const RealTimeStats = () => {
   const [data, setData] = useState({ totalUsers: 0, totalForms: 0, pendingForms: 0 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,8 +31,12 @@ const RealTimeStats = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const handleClick = () => {
+    navigate('/stats');
+  };
+
   return (
-    <div className="real-time-stats">
+    <div className="real-time-stats-container" onClick={handleClick} style={{ cursor: 'pointer' }}>
       <h1>Estatísticas em tempo real</h1>
       {loading ? (
         <p>Loading...</p>

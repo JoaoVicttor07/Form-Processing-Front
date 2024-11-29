@@ -1,0 +1,64 @@
+#back-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: transparent;
+  border: 1px solid #ffffff;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#back-button:hover {
+  background-color: #00d0ff;
+  box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+}
+
+.stats-container {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 1200px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  overflow: auto;
+  max-height: 90vh;
+  text-align: center;
+}
+
+.stats-container h1 {
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.charts-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.chart-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 400px;
+  overflow: auto; 
+}
+
+.chart-container h2 {
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}

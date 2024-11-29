@@ -1,102 +1,214 @@
-.form-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f9f9f9;
+.form-page {
+  background-image: url('../../../public/-24.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome-message {
+  position: absolute;
+  top: 20px;
+  color: white;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+#form-logout-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: transparent; /* Fundo transparente */
+  border: 1px solid #ffffff;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px 20px;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  position: relative;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#form-logout-button:hover {
+  background-color: #00d0ff;
+  box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+}
+
+#update-profile-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: transparent; /* Fundo transparente */
+  border: 1px solid #ffffff;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#update-profile-button:hover {
+  background-color: #00d0ff;
+  box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+}
+
+.form-container {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  overflow: auto; /* Adiciona rolagem se o conteúdo for grande */
+}
+
+.form-container p {
+  color: #ffffff;
 }
 
 .form-container h2 {
-  text-align: center;
+  color: #00d0ff;
   margin-bottom: 20px;
-  color: #333;
 }
 
 .form-container label {
-  display: block;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-weight: bold;
-  color: #555;
+  color: #ffffff;
+  align-self: flex-start;
 }
 
-.form-container input {
-  width: 100%;
+.form-container input,
+.form-container select {
   padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  background: transparent;
+  color: #ffffff;
+  margin-bottom: 10px;
+  width: 100%;
   box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-container input:focus,
+.form-container select:focus {
+  border-color: #00d0ff;
+  box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
+  outline: none;
+}
+
+.form-container input:hover,
+.form-container select:hover {
+  border-color: #00d0ff;
+}
+
+.form-container select option {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+.form-container input[type="date"] {
+  background-color: white;
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .form-container button {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  margin-top: 10px;
+  padding: 10px 20px;
   font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  color: rgb(0, 0, 0);
+  background-color: #ffffff;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .form-container button:hover {
-  background-color: #0056b3;
+  background-color: #00d0ff;
+  box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
 }
 
-.logout-button {
-  display: block;
-  margin: 20px auto;
+.meus-formularios-button,
+.close-formularios-button {
+  margin-bottom: 10px;
   padding: 10px 20px;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
   font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  color: rgb(0, 0, 0);
+  background-color: #ffffff;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.logout-button:hover {
-  background-color: #c82333;
+.meus-formularios-button:hover,
+.close-formularios-button:hover {
+  background-color: #00d0ff;
+  box-shadow: 0 0 10px rgba(0, 208, 255, 0.5);
 }
 
-.modal {
+.form-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 300px; /* Defina uma altura máxima */
+  overflow-y: auto; /* Adicione uma barra de rolagem vertical */
+  width: 100%; /* Defina uma largura fixa */
+}
+
+.form-container li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+.form-container li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+#modal-form {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1000;
+  justify-content: center;
 }
 
-.modal-content {
-  background: #fff;
+#modal-form-content {
+  background-color: #ffffff;
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 8px;
   text-align: center;
+  color: black;
 }
 
-.modal-content h3 {
-  margin-bottom: 20px;
-}
-
-.modal-content button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
+#modal-form-content button {
+  background-color: #007bff; /* Cor azul */
   color: white;
-  transition: background-color 0.3s;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.modal-content button:hover {
-  background-color: #0056b3;
+#modal-form-content button:hover {
+  background-color: #00d0ff;
 }
 
+.error-message {
+  color: red;
+  margin-top: 10px;
+}

@@ -8,6 +8,8 @@ import ProtectedRoute from './components/protectedRoute';
 import RealTimeStats from './pages/RealTimesStats';
 import MeusFormularios from './pages/MeusFormularios';
 import UpdateProfile from './pages/Profile';
+import ProfileInfo from './pages/ProfileInfo';
+import Stats from './pages/Stats';
 
 function App() {
   return (
@@ -21,7 +23,9 @@ function App() {
         <Route path="*" element={<h1>Not Found</h1>} />
         <Route path="/dados" element={<RealTimeStats />} />
         <Route path="/meus-formularios" element={<MeusFormularios />} />
-        <Route path="/perfil" element={<UpdateProfile />} />
+        <Route path="/perfil-update" element={<UpdateProfile />} />
+        <Route path="/perfil-info" element={<ProfileInfo/> } /> 
+        <Route path="/stats" element={<Stats/> } /> 
       </Routes>
     </Router>
   );

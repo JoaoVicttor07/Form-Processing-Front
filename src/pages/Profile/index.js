@@ -1,152 +1,175 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
+import './styles.css';
 
 const UpdateProfile = () => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true); // Para controlar o carregamento dos dados
-  const [isDeleting, setIsDeleting] = useState(false); // Para controlar o estado de exclusão
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
-  const token = localStorage.getItem('authToken'); // Assume que o token JWT está armazenado no localStorage
+  const token = localStorage.getItem('authToken');
 
-  // Função para carregar os dados do usuário
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
+    setLoading(true);
+    setError('');
     try {
-      const response = await axios.get('http://localhost:8080/profile', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      if (!token) {
+        setError('Token inválido. Faça login novamente.');
+        navigate('/signin');
+        return;
+      }
 
+      const response = await api.get('/user/profile', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const { nome, email } = response.data;
       setNome(nome);
       setEmail(email);
-      setLoading(false); // Dados carregados
-    } catch (err) {
+    } catch (error) {
+      console.error('Erro ao carregar os dados do usuário:', error);
       setError('Erro ao carregar os dados do usuário.');
+    } finally {
       setLoading(false);
     }
+  }, [token, navigate]);
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
+
+  const sanitizeInput = (input) => {
+    return input.replace(/[^a-zA-Z0-9Çç~´@.áéíóúâêîôûãõäëïöüÁÉÍÓÚÂÊÎÔÛÃÕÄËÏÖÜ ]/g, '');
   };
 
-  // Função para excluir o perfil
-  const deleteProfile = async () => {
-    if (window.confirm('Tem certeza que deseja excluir sua conta? Esta ação é irreversível.')) {
-      setIsDeleting(true); // Define o estado de exclusão para true
+  const isFormValid = () => {
+    const isNomeValid = nome.trim() !== '';
+    const isEmailValid = email.trim() !== '';
+    const isSenhaValid = senha.length >= 6;
+    const isConfirmarSenhaValid = confirmarSenha.length >= 6 && senha === confirmarSenha;
+
+    return isNomeValid && isEmailValid && isSenhaValid && isConfirmarSenhaValid;
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setMessage('');
+    setError('');
+
+    if (!isFormValid()) {
+      setError('Todos os campos são obrigatórios e as senhas devem ter pelo menos 6 caracteres e coincidir.');
+      return;
+    }
+
+    const sanitizedNome = sanitizeInput(nome);
+    const sanitizedEmail = sanitizeInput(email);
+    const sanitizedSenha = senha ? sanitizeInput(senha) : '';
+
+    if (window.confirm('Tem certeza que deseja atualizar seu perfil? Você será redirecionado para o login após a atualização.')) {
+      const userData = { nome: sanitizedNome, email: sanitizedEmail };
+      if (sanitizedSenha) {
+        userData.senha = sanitizedSenha;
+      }
 
       try {
-        await axios.delete('http://localhost:8080/user/delete', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        await api.put('/user/update', userData, {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        
-        // Após a exclusão, removemos o token e redirecionamos para a tela de login
+        setMessage('Perfil atualizado com sucesso.');
         localStorage.removeItem('authToken');
-        navigate('/signin');
-      } catch (err) {
-        setError('Erro ao excluir o perfil. Tente novamente mais tarde.');
-        setIsDeleting(false); // Resetar o estado de exclusão
+        setTimeout(() => {
+          navigate('/signin');
+        }, 2000);
+      } catch (error) {
+        console.error('Erro ao atualizar o perfil:', error);
+        setError('Erro ao atualizar o perfil.');
       }
     }
   };
 
-  // Carregar os dados do usuário assim que o componente for montado
-  useEffect(() => {
-    fetchUserData();
-  }, []);
+  const handleDelete = async (e) => {
+    e.preventDefault();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const data = {
-      nome,
-      email,
-      senha,
-    };
-
-    try {
-      const response = await axios.put(
-        'http://localhost:8080/user/update', // Substitua pelo seu endpoint
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setMessage('Dados atualizados com sucesso!');
-      setError('');
-    } catch (err) {
-      setMessage('');
-      setError('Erro ao atualizar os dados. Verifique os dados fornecidos ou tente novamente mais tarde.');
+    if (window.confirm("Tem certeza que deseja excluir sua conta? Esta ação é irreversível.")) {
+      try {
+        await api.delete('/user/delete', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        alert('Conta excluída com sucesso.');
+        localStorage.removeItem('authToken');
+        navigate('/signup');
+      } catch (error) {
+        console.error('Erro ao excluir a conta:', error);
+        setError('Erro ao excluir a conta.');
+      }
     }
   };
 
-  if (loading) {
-    return <p>Carregando...</p>;
-  }
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   return (
-    <div>
+    <div className="profile-container">
       <h2>Atualizar Perfil</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="nome">Nome:</label>
-          <input
-            type="text"
-            id="nome"
-            name="nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="email">E-mail:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="senha">Senha:</label>
-          <input
-            type="password"
-            id="senha"
-            name="senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <button type="submit">Atualizar</button>
-        </div>
-      </form>
-
-      {message && <p style={{ color: 'green' }}>{message}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      {/* Botão de exclusão */}
-      <button
-        onClick={deleteProfile}
-        disabled={isDeleting} // Desabilita o botão enquanto a exclusão está em andamento
-        style={{ backgroundColor: 'red', color: 'white', padding: '10px', border: 'none', marginTop: '20px' }}
-      >
-        {isDeleting ? 'Excluindo...' : 'Excluir Conta'}
-      </button>
+      {loading ? (
+        <p>Carregando...</p>
+      ) : (
+        <form onSubmit={handleUpdate} className="profile-form">
+          <div className="form-group">
+            <label htmlFor="nome">Nome:</label>
+            <input
+              id="nome"
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">Email:</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="senha">Nova Senha:</label>
+            <input
+              id="senha"
+              type="password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              minLength="6"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="confirmarSenha">Confirmar Nova Senha:</label>
+            <input
+              id="confirmarSenha"
+              type="password"
+              value={confirmarSenha}
+              onChange={(e) => setConfirmarSenha(e.target.value)}
+              minLength="6"
+            />
+          </div>
+          {message && <p className="success-message">{message}</p>}
+          {error && <p className="error-message">{error}</p>}
+          <div className="form-actions">
+            <button type="submit" className="btn btn-primary" disabled={!isFormValid()}>Atualizar</button>
+            <button type="button" onClick={handleDelete} className="btn btn-danger">Excluir Conta</button>
+          </div>
+        </form>
+      )}
+      <button onClick={handleBack} className="btn btn-secondary">Voltar</button>
     </div>
   );
 };

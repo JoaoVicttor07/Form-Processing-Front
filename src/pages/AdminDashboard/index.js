@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import RealTimeStats from '../RealTimesStats/index';
 import './styles.css';
 
 const AdminDashboard = () => {
@@ -10,12 +11,12 @@ const AdminDashboard = () => {
   const [filters, setFilters] = useState({ status: '', setor: '', date: '' });
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [message, setMessage] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showInProgressMessage, setShowInProgressMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    // Adiciona a classe 'admin-background' ao body quando o componente é montado
     document.body.classList.add('admin-background');
-
-    // Remove a classe 'admin-background' do body quando o componente é desmontado
     return () => {
       document.body.classList.remove('admin-background');
     };
@@ -49,14 +50,17 @@ const AdminDashboard = () => {
     setFilters({ ...filters, [name]: value });
   };
 
-  const handleStatusChange = async (id, status, message = '') => {
+  const handleStatusChange = async (id, status) => {
     try {
       const token = localStorage.getItem('authToken');
       const ticket = tickets.find(ticket => ticket.id === id);
+      if (!ticket) {
+        console.error('Ticket não encontrado com id:', id);
+        return;
+      }
       await api.patch(`/form/update/${id}`, {
         ...ticket,
-        status,
-        mensagem: message
+        status
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -64,8 +68,45 @@ const AdminDashboard = () => {
       });
       setTickets(tickets.map(ticket => (ticket.id === id ? { ...ticket, status } : ticket)));
       setSelectedTicket(null);
+      if (status === 'ANDAMENTO') {
+        setShowInProgressMessage(true);
+      }
+    } catch (error) {
+      console.error('Erro ao alterar status do ticket:', error);
+      if (error.response) {
+        console.error('Detalhes do erro:', error.response.data);
+      }
+    }
+  };
+
+  const handleResolveTicket = async (id, message) => {
+    if (message.length < 10) {
+      setErrorMessage('A mensagem deve ter no mínimo 10 caracteres.');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('authToken');
+      const ticket = tickets.find(ticket => ticket.id === id);
+      if (!ticket) {
+        console.error('Ticket não encontrado com id:', id);
+        return;
+      }
+      await api.patch(`/form/update/${id}`, {
+        ...ticket,
+        status: 'RESOLVIDO',
+        mensagem: message
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setTickets(tickets.map(ticket => (ticket.id === id ? { ...ticket, status: 'RESOLVIDO' } : ticket)));
+      setSelectedTicket(null);
       setShowMessageModal(false);
       setMessage('');
+      setErrorMessage('');
+      setShowSuccessMessage(true);
     } catch (error) {
       console.error('Erro ao alterar status do ticket:', error);
       if (error.response) {
@@ -75,7 +116,9 @@ const AdminDashboard = () => {
   };
 
   const handleRejectTicket = (id) => {
-    setSelectedTicket(id);
+    setSelectedTicket(tickets.find(ticket => ticket.id === id));
+    setMessage('');
+    setErrorMessage('');
     setShowMessageModal(true);
   };
 
@@ -93,7 +136,7 @@ const AdminDashboard = () => {
     try {
       const formattedDate = dateString.replace(' ', 'T');
       const date = new Date(formattedDate);
-      return date.toLocaleString(); // Exibe data no formato local
+      return date.toLocaleString();
     } catch (error) {
       console.error('Erro ao formatar a data:', error);
       return 'Data inválida';
@@ -102,6 +145,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
+      <RealTimeStats /> { }
       <button className="logout-button" onClick={handleLogout}>Logout</button>
       <div className="content">
         <div className="main-content">
@@ -155,18 +199,35 @@ const AdminDashboard = () => {
         )}
       </div>
       {showMessageModal && (
-        <div className="modal">
-          <div className="modal-content">
+        <div id="modal-admin-msg">
+          <div id="modal-admin-msg-content">
             <h3>Enviar Mensagem</h3>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Digite a mensagem para o usuário"
+              placeholder="Digite a mensagem para o usuário (mínimo 10 caracteres)"
               rows="4"
               cols="50"
             />
-            <button onClick={() => setShowMessageModal(false)}>Fechar</button>
-            <button onClick={() => handleStatusChange(selectedTicket, 'RESOLVIDO', message)}>Confirmar mensagem e enviar</button>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            <button onClick={() => { setShowMessageModal(false); setMessage(''); setErrorMessage(''); }}>Fechar</button>
+            <button onClick={() => handleResolveTicket(selectedTicket.id, message)}>Confirmar mensagem e enviar</button>
+          </div>
+        </div>
+      )}
+      {showSuccessMessage && (
+        <div className="success-message-overlay">
+          <div className="success-message-content">
+            <h3>Mensagem enviada com sucesso!</h3>
+            <button onClick={() => setShowSuccessMessage(false)}>Voltar</button>
+          </div>
+        </div>
+      )}
+      {showInProgressMessage && (
+        <div className="success-message-overlay">
+          <div className="success-message-content">
+            <h3>Status do ticket alterado para Em andamento com sucesso!</h3>
+            <button onClick={() => setShowInProgressMessage(false)}>Fechar</button>
           </div>
         </div>
       )}
