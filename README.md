@@ -49,6 +49,8 @@ Este projeto foi desenvolvido como parte do trabalho da A3, focando em melhorar 
 - Navegação entre telas de forma dinâmica usando React Router.
 - Comunicação em tempo real com a API para atualização do status das solicitações.
 
+<h2 id=instalacao>🚀 Instalação</h2>
+
 Para clonar o repositório e instalar as dependências:
 
 <h3>Pré-requisitos</h3>
