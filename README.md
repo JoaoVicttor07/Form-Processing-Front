@@ -1,9 +1,9 @@
 <h1 align="center" style="font-weight: bold;">Form Processing Frontend 💻</h1>
 
 <p align="center">
+ <a href="layout">Layout</a> • 
  <a href="#descricao">Descrição</a> • 
  <a href="#funcionalidades">Funcionalidades</a> • 
- <a href="diagramas">Diagramas</a> • 
  <a href="#instalacao">Instalação</a> • 
   <a href="#colab">Colaboradores</a>
 </p>
